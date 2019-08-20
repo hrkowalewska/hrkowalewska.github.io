@@ -4,24 +4,35 @@
   
   <url>
     <loc>https://helenkowalewska.uk/authors/helen/</loc>
-    <lastmod>2019-08-12T00:00:00+01:00</lastmod>
+    <lastmod>2019-08-15T23:57:25+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://helenkowalewska.uk/authors/</loc>
-    <lastmod>2019-08-12T00:00:00+01:00</lastmod>
+    <lastmod>2019-08-15T23:57:25+01:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://helenkowalewska.uk/</loc>
+    <lastmod>2019-08-15T23:57:25+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://helenkowalewska.uk/project/</loc>
+    <lastmod>2019-08-15T23:57:25+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://helenkowalewska.uk/project/esrc-new-investigators-grant/</loc>
+    <lastmod>2019-08-15T23:57:25+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://helenkowalewska.uk/media/2019-08-bbc-article/</loc>
     <lastmod>2019-08-12T00:00:00+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://helenkowalewska.uk/</loc>
-    <lastmod>2019-08-12T00:00:00+01:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -74,31 +85,20 @@
   </url>
   
   <url>
-    <loc>https://helenkowalewska.uk/project/</loc>
-    <lastmod>2019-07-15T23:57:25+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://helenkowalewska.uk/publication_types/2/</loc>
-    <lastmod>2019-07-02T00:00:00+01:00</lastmod>
+    <lastmod>2019-07-01T00:00:00+01:00</lastmod>
     <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://helenkowalewska.uk/publication/2019-bringing-women-on-board-family-policies-and-quotas/</loc>
-    <lastmod>2019-07-02T00:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://helenkowalewska.uk/publication_types/</loc>
-    <lastmod>2019-07-02T00:00:00+01:00</lastmod>
+    <lastmod>2019-07-01T00:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://helenkowalewska.uk/publication/</loc>
-    <lastmod>2019-07-02T00:00:00+01:00</lastmod>
+    <lastmod>2019-07-01T00:00:00+01:00</lastmod>
   </url>
   
   <url>
@@ -197,6 +197,10 @@
   
   <url>
     <loc>https://helenkowalewska.uk/authors/admin/</loc>
+  </url>
+  
+  <url>
+    <loc>https://helenkowalewska.uk/talk/2019-bringing-women-on-board-family-policies-and-quotas/</loc>
   </url>
   
   <url>
