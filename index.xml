@@ -7,10 +7,28 @@
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
     <copyright>Helen Kowalewska &amp;copy; {year}</copyright>
-    <lastBuildDate>Sat, 03 Oct 2020 00:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 18 Feb 2021 00:00:00 +0100</lastBuildDate>
     
 	    <atom:link href="https://helenkowalewska.uk/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Recent &amp; Upcoming Talks</title>
+      <link>https://helenkowalewska.uk/talk/</link>
+      <pubDate>Thu, 18 Feb 2021 00:00:00 +0100</pubDate>
+      
+      <guid>https://helenkowalewska.uk/talk/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Media</title>
+      <link>https://helenkowalewska.uk/media/</link>
+      <pubDate>Thu, 10 Dec 2020 00:00:00 +0100</pubDate>
+      
+      <guid>https://helenkowalewska.uk/media/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Publications</title>
@@ -27,24 +45,6 @@
       <pubDate>Wed, 09 Sep 2020 00:00:00 +0100</pubDate>
       
       <guid>https://helenkowalewska.uk/post/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Media</title>
-      <link>https://helenkowalewska.uk/media/</link>
-      <pubDate>Mon, 16 Dec 2019 00:00:00 +0100</pubDate>
-      
-      <guid>https://helenkowalewska.uk/media/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Recent &amp; Upcoming Talks</title>
-      <link>https://helenkowalewska.uk/talk/</link>
-      <pubDate>Wed, 21 Aug 2019 00:00:00 +0100</pubDate>
-      
-      <guid>https://helenkowalewska.uk/talk/</guid>
       <description></description>
     </item>
     
