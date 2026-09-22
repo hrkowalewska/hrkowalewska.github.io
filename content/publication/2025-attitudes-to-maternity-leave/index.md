@@ -3,7 +3,7 @@
 
 title: "Economic, Normative, and Moral Reasoning in Employer Attitudes to Maternity Leave"
 authors: ["helen"]
-date: 2025-08-04T00:00:00+01:00
+date: 2026-10-01T00:00:00+01:00
 doi: "10.1017/S1474746425100845"
 
 # Schedule page publish date (NOT publication's date).
