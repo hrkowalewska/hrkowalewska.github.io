@@ -8,10 +8,12 @@
 #  url = "#about"
 #  weight = 10
 
-[[main]]
-  name = "News"
-  url = "/post/"
-  weight = 20
+# News section retired. Uncomment this and the `content/post/` entry in
+# `config.toml`'s `ignoreFiles` to bring it back.
+#[[main]]
+#  name = "News"
+#  url = "/post/"
+#  weight = 20
 
 [[main]]
   name = "Projects"

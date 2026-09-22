@@ -40,7 +40,8 @@ removePathAccents = true  # Workaround for https://github.com/gohugoio/hugo/issu
 paginate = 10  # Number of items per page in paginated lists.
 enableEmoji = true
 footnotereturnlinkcontents = "<sup>^</sup>"
-ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+# The trailing "content/post/" retires the News section. Remove it to reenable.
+ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "content/post/"]
 
 [outputs]
   home = [ "HTML", "RSS", "JSON" ]
