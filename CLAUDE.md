@@ -23,24 +23,29 @@ Production build, same pinned image:
 docker compose run --rm server hugo --gc --minify
 ```
 
-There are no tests, linters, or CI.
+There are no tests or linters. CI is a single workflow, see Deployment.
 
 ## Deployment
 
-`public/` is a git submodule pointing at `github.com/hrkowalewska/hrkowalewska.github.io`, served
-by GitHub Pages at `helenkowalewska.uk` (see `public/CNAME`). Publishing is a two-repo commit:
+Pushing to `master` deploys. `.github/workflows/deploy.yml` builds with the pinned Hugo image and
+publishes to GitHub Pages via `actions/deploy-pages`. CI commits nothing, and no build output lives
+in the repo.
 
-1. Build into `public/`.
-2. Commit inside `public/` with the message `chore: publish site`, then push.
-3. Commit the bumped submodule pointer in this repo **in the same commit as the content change**.
+The Pages source is **GitHub Actions**, not a branch. The custom domain `helenkowalewska.uk` is set
+in repo settings and reasserted on every build by `static/CNAME`.
 
-Commit `c293ecb` shows the shape. `netlify.toml` is vestigial, pins an ancient Hugo version, and is
-not the live deploy path.
+`public/` is gitignored local build output. Delete it freely.
+
+The site was previously published by hand into a `public/` submodule pointing at a second repo.
+That output history is preserved on the `legacy-output` branch, which doubles as the rollback
+target: set Settings -> Pages -> Source back to "Deploy from a branch" and pick `legacy-output`.
+
+`netlify.toml` is vestigial, pins an ancient Hugo version, and is not the deploy path.
 
 ## Architecture
 
-The theme is **Wowchemy/Academic v4.3.1**, a git submodule at `themes/academic`. Never edit it.
-`themes/helen-2024` is empty and unused.
+The theme is **Wowchemy/Academic v4.3.1**, vendored as ordinary tracked files at `themes/academic`.
+Never edit it. This repo has no git submodules. `themes/helen-2024` is empty and unused.
 
 **Config** is split across `config/_default/`. `config.toml` holds site settings, taxonomies and
 `ignoreFiles`; `params.toml` holds theme options, contact details and `plugins_css`; `menus.toml`

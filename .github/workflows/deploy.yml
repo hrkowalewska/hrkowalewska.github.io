@@ -1,0 +1,50 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it part-way.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # `public` is no longer a submodule, and nothing else in the tree is one.
+      # The Academic theme is vendored under themes/academic.
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      # Pinned to the same image as docker-compose.yml. Academic 4.3.1 breaks on
+      # newer Hugo, and the theme needs the extended build for its SCSS.
+      - name: Build
+        run: |
+          docker run --rm -v "$PWD:/src" \
+            hugomods/hugo:0.116.1 \
+            hugo --gc --minify --cleanDestinationDir
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    # Branch pushes and manual dispatches build, but only master deploys.
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
