@@ -3,11 +3,12 @@
 
 title: "Designed and delivered a talk to Year 12 Sociology students across four UK schools"
 authors: ["helen"]
-date: 2024-11-15T00:00:00+01:00
+aliases: ["/media/2024-year-12-talk/"]
+date: 2025-11-15T00:00:00+01:00
 doi: ""
 
 # Schedule page publish date (NOT publication's date).
-publishDate: 2024-11-15T00:00:00+01:00
+publishDate: 2025-11-15T00:00:00+01:00
 
 # Publication type.
 # Legend: 0 = Uncategorized; 1 = Conference paper; 2 = Journal article;
@@ -16,7 +17,7 @@ publishDate: 2024-11-15T00:00:00+01:00
 publication_types: []
 
 # Publication name and optional abbreviated publication name.
-publication: ""
+publication: "2024 and 2025"
 publication_short: ""
 
 abstract: ""
