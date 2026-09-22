@@ -14,8 +14,7 @@ docker compose up   # hugomods/hugo:0.116.1, drafts included, http://localhost:1
 ```
 
 **Do not run the system `hugo`.** It is far newer (0.162.x) and the Academic 4.3.1 theme breaks on
-it. `bin/hugo` (a stale 0.55.6 x86_64 binary), `view.sh`, `update_academic.sh` and
-`scripts/init_kickstart.sh` are legacy leftovers from the theme's own tooling. Ignore them.
+it. Always go through Docker so the pinned version is the one that builds.
 
 Production build, same pinned image:
 
@@ -39,8 +38,6 @@ in repo settings and reasserted on every build by `static/CNAME`.
 The site was previously published by hand into a `public/` submodule pointing at a second repo.
 That output history is preserved on the `legacy-output` branch, which doubles as the rollback
 target: set Settings -> Pages -> Source back to "Deploy from a branch" and pick `legacy-output`.
-
-`netlify.toml` is vestigial, pins an ancient Hugo version, and is not the deploy path.
 
 ## Architecture
 
