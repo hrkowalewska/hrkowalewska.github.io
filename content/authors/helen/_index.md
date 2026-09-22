@@ -94,4 +94,4 @@ and the
 
 #### Curriculum vitae
 
-[Download my CV (PDF)](/authors/helen/Helen.Kowalewska.CV.Jan.2026.pdf)
+[Download my CV (PDF)](/authors/helen/Helen.Kowalewska.CV.Sep.2026.pdf)
