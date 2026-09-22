@@ -90,7 +90,7 @@ Society](https://doi.org/10.1017/S1474746425100845), and
 [The
 Independent](https://www.independent.co.uk/news/uk/home-news/unemployed-men-masculinity-gender-roles-b2364228.html)
 and the
-[BBC](https://www.bbc.co.uk/future/article/20250519-why-money-and-power-affects-male-self-esteem)
+[BBC](https://www.bbc.co.uk/future/article/20250519-why-money-and-power-affects-male-self-esteem).
 
 #### Curriculum vitae
 
