@@ -24,7 +24,7 @@ date_format = "2006"
   title = "Unit Convenor for 'Sociology of the Family and Family Policy’"
   url = ""
   certificate_url = ""
-  date_start = "2025-10-03"
+  date_start = "2026-10-03"
   date_end = ""
   description = "Second/third-year module for BSc degrees.<br><br>[Unit handbook](/teaching/sociology-of-the-family-and-family-policy-unit-handbook.pdf)"
 
