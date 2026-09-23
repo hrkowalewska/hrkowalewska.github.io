@@ -2,29 +2,29 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Helen Kowalewska's academic site. Hugo static site, Wowchemy/Academic theme, deployed to GitHub
+Helen Kowalewska's academic site. Hugo static site on a hand-written theme, deployed to GitHub
 Pages.
 
 ## Commands
 
-Run the dev server through Docker, which pins the Hugo version CI also uses:
+Tasks live in `poe_tasks.yaml` and run with [poethepoet](https://poethepoet.natn.io)
+(`uv tool install poethepoet`). `poe` on its own lists them.
 
 ```sh
-docker compose up   # ghcr.io/gohugoio/hugo:v0.166.0, drafts included, http://localhost:1313
+poe up        # dev server, drafts included, http://localhost:1313
+poe down      # stop it
+poe build     # production build into public/
+poe clean     # remove public/ and resources/
+poe staging   # build for the staging host and rsync it there
 ```
 
-Production build, same pinned image:
+Every task shells out to the pinned Hugo image in `docker-compose.yml`, so local output matches CI.
+The image entrypoint is Hugo itself, so subcommands and flags are passed without a leading `hugo`,
+which is why the underlying command reads `docker compose run --rm server --gc --minify`.
 
-```sh
-docker compose run --rm server --gc --minify
-```
-
-The image entrypoint is Hugo itself, so subcommands and flags are passed without a leading `hugo`.
-
-The system `hugo` works too and is fine for a quick check. This repo was pinned to 0.116.1 for
-years on the belief that Academic 4.3.1 broke on anything newer. That is not true. The theme needed
-five removed site variables remapped, which `layouts/` now shadows, and one content date corrected.
-Prefer Docker anyway so local output matches CI.
+The system `hugo` works too and is fine for a quick check, but prefer Docker so local output
+matches CI. This repo was pinned to 0.116.1 for years on the belief that the vendored theme broke on
+anything newer. It did not; the theme has since been removed entirely.
 
 There are no tests or linters. CI is a single workflow, see Deployment.
 
@@ -39,62 +39,78 @@ in repo settings and reasserted on every build by `static/CNAME`.
 
 `public/` is gitignored local build output. Delete it freely.
 
+### Staging
+
+`poe staging` builds with `--environment staging` and rsyncs `public/` to the home server, which
+serves it at `https://helen-staging.kowfam.uk` for Helen to review before anything goes live.
+
+Two things make a staging build differ from production, and nothing else does. `config/staging/`
+overrides `baseurl`, and `layouts/_partials/head.html` adds `noindex, nofollow` for any
+non-production environment, which matters because the staging vhost is real HTTPS on a resolvable
+name. CSS minification and fingerprinting are gated on `hugo.IsServer`, not `hugo.IsProduction`,
+specifically so staging is otherwise byte-identical to what ships.
+
+The rsync target lives in `.env`, which is gitignored because this repo is public. Copy
+`.env.example` to start. The server side is one nginx container defined in the `home-infra` repo at
+`ansible/roles/compose/files/services/helen-staging/`; its vhost and TLS are derived automatically
+from the compose service key and the published port.
+
 The site was previously published by hand into a `public/` submodule pointing at a second repo.
 That output history is preserved on the `legacy-output` branch, which doubles as the rollback
 target: set Settings -> Pages -> Source back to "Deploy from a branch" and pick `legacy-output`.
 
 ## Architecture
 
-The theme is **Wowchemy/Academic v4.3.1**, vendored as ordinary tracked files at `themes/academic`.
-Never edit it. This repo has no git submodules.
+**No third-party theme.** The site runs on roughly a dozen hand-written templates in `layouts/`.
+The Wowchemy/Academic theme it used to vendor is gone, along with its widget system, client-side
+search, isotope filters and Bootstrap. Nothing external is left that can rot.
 
-**Config** is split across `config/_default/`. `config.toml` holds site settings, taxonomies and
-`ignoreFiles`; `params.toml` holds theme options, contact details and `plugins_css`; `menus.toml`
-and `languages.toml` do what their names suggest.
+**Config** is split across `config/_default/`. `config.toml` holds site settings and `ignoreFiles`;
+`params.toml` holds everything the templates display, and every key in it is used somewhere;
+`menus.toml` and `languages.toml` do what their names suggest. `config/staging/` overrides only
+`baseurl`, and is merged over `_default/` when Hugo runs with `--environment staging`.
 
-**The homepage is widget-driven.** Every file in `content/home/` is a headless widget page.
-`widget = "..."` picks which theme widget renders, `weight` orders the section, and `active`
-toggles it on or off. Nav entries in `menus.toml` are anchors named after the widget file, so
-`#featured` targets `content/home/featured.md`.
+**Templates** use Hugo's current layout structure: `baseof.html`, `home.html`, `section.html` and
+`page.html` at the root of `layouts/`, partials in `layouts/_partials/`, and the Markdown link render
+hook in `layouts/_markup/`.
 
-**Content sections** are `publication`, `media`, `project`, `talk`, `take-part`, `authors`, and
-`post` (retired, see below). Each page is a page bundle at `content/<section>/<slug>/index.md`
-with `featured.png` beside it for card thumbnails and social share images, plus `cite.bib` for
-publications. Section-level front matter lives in `_index.md` and sets `view:` (1 list, 2 compact,
-3 card, 4 citation). `content/teaching/` is the exception. It has no `_index.md` and just holds
-PDFs that the Teaching widget links to directly.
+`_partials/entry.html` is the one to understand. It renders a single row of the year-rail ledger and
+is used by every listing on the site, working out the rail label and link chips from `.Section`. Add
+a content section and it needs a branch there; that is the only place section-specific logic lives.
 
-**`media` is a custom section the theme does not ship.** It renders only because of three
-hand-written overrides. `layouts/section/media.html` is the list page, `layouts/media/single.html`
-is the single page, and `layouts/partials/li_compact.html` carries a `media` branch alongside the
-theme's built-in types. Adding another custom section needs the same three pieces.
+**Content sections** are `publication`, `media`, `talk`, `project`, `take-part`, `authors` and
+`post` (retired, see below). Each page is a page bundle at `content/<section>/<slug>/index.md`, and
+each section has an `_index.md` supplying the list page title and intro. `content/teaching/` holds
+only PDFs linked from the homepage.
 
-Everything in `layouts/` shadows the matching path under `themes/academic/layouts/`. To customise,
-copy the theme file to the same path here and edit the copy. `i18n/en.yaml` overrides theme
-strings the same way, and `assets/css/custom.css` is loaded via `plugins_css = ["custom"]` in
-`params.toml`.
+Front matter is deliberately minimal — a publication is about eight lines. Three field names are
+chosen to dodge Hugo reserved keys and must not be renamed back: **`link`** (not `url`, which
+overrides the page URL), **`pubtype`** (not `type`, which drives layout lookup) and **`medium`** (not
+`kind`, removed as a front-matter key in Hugo 0.144).
 
-Seven of the shadows exist only to keep the theme building on current Hugo, and carry no design
-change. `_default/baseof.html`, `_default/rss.xml`, `slides/baseof.html`, `partials/site_head.html`,
-`partials/site_js.html`, `partials/comments.html` and `partials/page_metadata.html` remap
-`site.IsServer`, `site.GoogleAnalytics`, `site.DisqusShortname`, `site.LanguageCode` and
-`site.Author`, all of which Hugo removed. `rss.xml` also drops the theme's `managingEditor`,
-`webMaster` and `author` elements, which were empty before and would otherwise start publishing a
-contact address.
+**Hand-maintained lists live in `data/`**, not in content. `experience.yaml`, `grants.yaml` and
+`teaching.yaml` are read directly by `home.html`. Adding a grant means adding three lines of YAML.
 
-Helen's profile and CV live in `content/authors/helen/`. The CV filename carries a date, so
-replacing it means updating the reference in `_index.md` too.
+**Styling** is one hand-written file, `assets/css/main.css`, run through `resources.ExecuteAsTemplate`
+so it can interpolate the self-hosted font URLs from `assets/fonts/`. No Sass, no Tailwind, no build
+step beyond Hugo itself. Colours are `oklch` custom properties with light and dark defined on
+`:root`, a `prefers-color-scheme` block and an explicit `[data-theme]` block so the toggle wins in
+both directions.
 
-## The retired News section
+Two colours carry meaning: `--series-a` (teal) marks scholarly output and `--series-b` (ochre) marks
+public engagement. They are deliberately **not** pink and blue — the research is about gender, and
+reproducing that convention would undercut it.
 
-The `post` section is switched off in three places at once. Re-enabling it means reversing all of:
+Minification and fingerprinting are gated on `hugo.IsServer`, not `hugo.IsProduction`, so only the
+dev server skips them and a staging build is otherwise byte-identical to production.
 
-1. the `content/post/` entry in `ignoreFiles` in `config/_default/config.toml`,
-2. `active = false` in `content/home/posts.md`,
-3. the commented-out News block in `config/_default/menus.toml`.
+**External links open in a new tab.** `_partials/extlink.html` emits the attributes when a URL's host
+differs from `site.BaseURL`; it is called from the link render hook, the entry partial, the single
+page template and the footer. Its output must be piped through `safeHTMLAttr`, or Go's contextual
+autoescaper emits `ZgotmplZ` instead of the attributes.
 
-Each of the three carries a comment pointing at the others. Changing only one leaves the widget
-rendering empty.
+Helen's profile lives in `content/authors/helen/`, her portrait at `assets/img/portrait.jpg`. The CV
+filename carries a date, so replacing it means updating `params.toml` too.
 
 ## Conventions
 
