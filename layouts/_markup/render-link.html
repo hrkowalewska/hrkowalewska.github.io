@@ -5,3 +5,7 @@
   {{- with .Title }} title="{{ . }}"{{ end }}
   {{- partial "extlink.html" .Destination | safeHTMLAttr -}}
 >{{ .Text }}</a>
+{{- /* This trim matters. A render hook emits its template verbatim, so the
+       newline after </a> would become a space in the rendered text, putting a
+       gap before any punctuation that follows a link and letting a full stop
+       wrap onto its own line. */ -}}
