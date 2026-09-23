@@ -1,0 +1,24 @@
+{{ define "main" }}
+<section class="page-head">
+  <div class="wrap">
+    <p class="label">{{ len .Pages }} items{{ with .Pages }} &middot; {{ (index (sort . "Date") 0).Date.Year }}&ndash;{{ (index (sort . "Date" "desc") 0).Date.Year }}{{ end }}</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+  </div>
+</section>
+
+<section class="section{{ if eq .Section "media" }} series-b{{ end }}">
+  <div class="wrap">
+    {{- range .Pages.GroupByDate "2006" }}
+    <div class="year-group">
+      <h2 class="year-heading">{{ .Key }}</h2>
+      <div class="ledger">
+        {{- range .Pages }}
+        {{ partial "entry.html" . }}
+        {{- end }}
+      </div>
+    </div>
+    {{- end }}
+  </div>
+</section>
+{{ end }}

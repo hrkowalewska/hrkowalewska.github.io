@@ -1,0 +1,103 @@
+{{- /*
+  One row of the year-rail ledger. Used by every listing on the site.
+
+  Takes a page and works out the rail label and the link chips from the
+  section, so callers only pass the page:
+
+      {{ partial "entry.html" $page }}
+
+  The section wrapper decides which of the two series colours applies, by
+  carrying `.series-b` on an ancestor. This partial stays colour-agnostic.
+*/ -}}
+
+{{- $kindLabel := "" -}}
+{{- $links := slice -}}
+
+{{- if eq .Section "publication" -}}
+  {{- $names := dict
+        "article"          "Journal<br>article"
+        "working-paper"    "Working<br>paper"
+        "report"           "Report"
+        "thesis"           "Thesis"
+        "chapter"          "Book<br>section"
+        "book"             "Book"
+        "conference-paper" "Conference<br>paper" -}}
+  {{- $kindLabel = index $names (.Params.pubtype | default "other") | default "Other" -}}
+  {{- with .Params.link }}{{ $links = $links | append (dict "label" "Read" "url" .) }}{{ end -}}
+  {{- with .Params.doi }}{{ $links = $links | append (dict "label" (printf "DOI %s" .) "url" (printf "https://doi.org/%s" .)) }}{{ end -}}
+
+{{- else if eq .Section "media" -}}
+  {{- $names := dict
+        "press"     "Press"
+        "writing"   "Writing"
+        "broadcast" "Broadcast"
+        "evidence"  "Evidence"
+        "talk"      "Talk" -}}
+  {{- $kindLabel = index $names (.Params.medium | default "press") | default "Press" -}}
+  {{- $verb := cond (eq .Params.medium "broadcast") "Listen" "Read" -}}
+  {{- with .Params.link }}{{ $links = $links | append (dict "label" $verb "url" .) }}{{ end -}}
+
+{{- else if eq .Section "talk" -}}
+  {{- $kindLabel = "Talk" -}}
+  {{- with .Params.slides -}}
+    {{- with $.Resources.Get . }}{{ $links = $links | append (dict "label" "Slides" "url" .RelPermalink) }}{{ end -}}
+  {{- end -}}
+  {{- with .Params.event_url }}{{ $links = $links | append (dict "label" "Event" "url" .) }}{{ end -}}
+{{- end -}}
+
+<article class="entry">
+  <div class="entry-rail">
+    <span class="entry-year">{{ .Date.Year }}</span>
+    {{- with $kindLabel }}
+    <span class="entry-kind">{{ . | safeHTML }}</span>
+    {{- end }}
+  </div>
+  <div class="entry-body">
+    <h3 class="entry-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+
+    {{- $bits := slice -}}
+    {{- with .Params.venue }}{{ $bits = $bits | append (printf "<cite>%s</cite>" .) }}{{ end -}}
+    {{- with .Params.event }}{{ $bits = $bits | append . }}{{ end -}}
+    {{- with .Params.location }}{{ $bits = $bits | append . }}{{ end -}}
+    {{- /* Author pages carry the display name in `name`, not `title`, and the
+           `else` branch of `with` rebinds the dot, so the slug is captured
+           first and used as the fallback. */ -}}
+    {{- $others := slice -}}
+    {{- range $slug := .Params.authors -}}
+      {{- if ne $slug "helen" -}}
+        {{- $name := $slug -}}
+        {{- with site.GetPage (printf "/authors/%s" $slug) -}}
+          {{- $name = .Params.name | default .Title | default $slug -}}
+        {{- end -}}
+        {{- $others = $others | append $name -}}
+      {{- end -}}
+    {{- end -}}
+    {{- with $others }}{{ $bits = $bits | append (printf "<span class=\"with\">with %s</span>" (delimit . ", ")) }}{{ end -}}
+    {{- with $bits }}
+    <p class="entry-venue">{{ delimit . " &middot; " | safeHTML }}</p>
+    {{- end }}
+
+    {{- /* Media summaries are hand-written Markdown carrying the outlet and a
+           source link, so they render as prose rather than a venue line. */ -}}
+    {{- if and (eq .Section "media") .Params.summary }}
+    <p class="entry-venue">{{ .Params.summary | markdownify }}</p>
+    {{- end }}
+
+    {{- with $links }}
+    <p class="entry-links">
+      {{- range . }}
+      <a class="chip" href="{{ .url }}"{{ partial "extlink.html" .url | safeHTMLAttr }}>{{ .label }}</a>
+      {{- end }}
+    </p>
+    {{- end }}
+
+    {{- /* Abstracts live in front matter and these pages have empty bodies, so
+           they expand in place rather than sending the reader to a blank page. */ -}}
+    {{- with .Params.abstract }}
+    <details>
+      <summary>Abstract</summary>
+      <p>{{ . }}</p>
+    </details>
+    {{- end }}
+  </div>
+</article>

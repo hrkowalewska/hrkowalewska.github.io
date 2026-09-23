@@ -1,0 +1,14 @@
+{{- /*
+  Emits ` target="_blank" rel="noopener"` when a URL points off-site, and
+  nothing when it does not. Go's contextual autoescaper will not interpolate a
+  value into an attribute-name position, so the call site must pipe this through
+  safeHTMLAttr:
+
+      <a href="{{ $u }}"{{ partial "extlink.html" $u | safeHTMLAttr }}>
+
+  Scoped to external links on purpose: internal links opening new tabs would
+  break the back button and spawn a tab per click.
+*/ -}}
+{{- $u := urls.Parse . -}}
+{{- $site := urls.Parse site.BaseURL -}}
+{{- if and $u.Host (ne $u.Host $site.Host) }} target="_blank" rel="noopener"{{ end -}}

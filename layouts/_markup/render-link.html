@@ -1,0 +1,7 @@
+{{- /* Link render hook: external links from Markdown open in a new tab.
+       Replaces the old theme's [blackfriday] hrefTargetBlank setting, which
+       Hugo removed along with Blackfriday itself. */ -}}
+<a href="{{ .Destination | safeURL }}"
+  {{- with .Title }} title="{{ . }}"{{ end }}
+  {{- partial "extlink.html" .Destination | safeHTMLAttr -}}
+>{{ .Text }}</a>

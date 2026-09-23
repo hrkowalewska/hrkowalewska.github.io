@@ -1,0 +1,130 @@
+{{ define "main" }}
+{{- $helen := site.GetPage "/authors/helen" -}}
+{{- $pubs := where site.RegularPages "Section" "publication" -}}
+{{- $media := where site.RegularPages "Section" "media" -}}
+{{- $projects := where site.RegularPages "Section" "project" -}}
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <p class="hero-eyebrow">
+        <span class="label">{{ site.Params.field }}</span>
+        <span class="label">{{ site.Params.institution }}</span>
+      </p>
+      <h1 class="hero-statement">{{ site.Params.statement | markdownify }}</h1>
+      <p class="hero-meta">
+        <strong>{{ $helen.Params.name }}</strong>
+        <span>{{ $helen.Params.role }}, {{ site.Params.department }}</span>
+        {{- with site.Params.editorship }}<span>{{ . | markdownify }}</span>{{ end }}
+      </p>
+    </div>
+    {{- with resources.Get site.Params.portrait }}
+    {{- $hero := .Process "resize 1120x webp q82" }}
+    <figure class="hero-portrait">
+      <img src="{{ $hero.RelPermalink }}" width="{{ $hero.Width }}" height="{{ $hero.Height }}"
+           alt="{{ $helen.Params.name }}, {{ $helen.Params.role }} at the {{ site.Params.institution }}">
+    </figure>
+    {{- end }}
+  </div>
+</section>
+
+{{- /* Series A: scholarship. */}}
+<section class="section" id="research">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Recent research</h2>
+      <a class="more" href="{{ "/publication/" | relURL }}">All {{ len $pubs }} publications &rarr;</a>
+    </div>
+    <div class="ledger">
+      {{- range first 4 (sort $pubs "Date" "desc") }}
+      {{ partial "entry.html" . }}
+      {{- end }}
+    </div>
+  </div>
+</section>
+
+<section class="section" id="projects">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Funded projects</h2>
+      <a class="more" href="{{ "/project/" | relURL }}">All {{ len $projects }} projects &rarr;</a>
+    </div>
+    <div class="grid-projects">
+      {{- range first 2 (sort $projects "Date" "desc") }}
+      <article class="project">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        <p>{{ .Params.summary | plainify | truncate 260 }}</p>
+      </article>
+      {{- end }}
+    </div>
+  </div>
+</section>
+
+{{- /* Series B: public engagement. The wrapper class flips the accent. */}}
+<section class="section series-b" id="public">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>In public</h2>
+      <a class="more" href="{{ "/media/" | relURL }}">All {{ len $media }} items &rarr;</a>
+    </div>
+    <div class="ledger">
+      {{- range first 5 (sort $media "Date" "desc") }}
+      {{ partial "entry.html" . }}
+      {{- end }}
+    </div>
+  </div>
+</section>
+
+<section class="section" id="teaching">
+  <div class="wrap">
+    <div class="section-head"><h2>Teaching &amp; recognition</h2></div>
+    <div class="cols">
+      <div>
+        <h3 class="label">Teaching</h3>
+        <div class="stack">
+          {{- range first 4 hugo.Data.teaching }}
+          <div class="stack-item">
+            <span class="stack-when">{{ substr .date 0 4 }}</span>
+            <div>
+              <p class="stack-what">{{ .title }}</p>
+              <p class="stack-where">{{ .org }}{{ with .note }} &middot; {{ . | markdownify }}{{ end }}</p>
+            </div>
+          </div>
+          {{- end }}
+        </div>
+      </div>
+      <div>
+        <h3 class="label">Grants &amp; prizes</h3>
+        <div class="stack">
+          {{- range first 4 hugo.Data.grants }}
+          <div class="stack-item">
+            <span class="stack-when">{{ substr .date 0 4 }}</span>
+            <div>
+              <p class="stack-what">{{ .title }}</p>
+              <p class="stack-where">{{ .org }}</p>
+            </div>
+          </div>
+          {{- end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="section-head"><h2>About</h2></div>
+    <div class="about-grid">
+      {{- with resources.Get site.Params.portrait }}
+      {{- $sq := .Process "resize 720x720 webp q82 smart" }}
+      <figure class="about-portrait">
+        <img src="{{ $sq.RelPermalink }}" width="{{ $sq.Width }}" height="{{ $sq.Height }}" alt="" loading="lazy">
+      </figure>
+      {{- end }}
+      <div class="prose">
+        {{ $helen.Content }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}

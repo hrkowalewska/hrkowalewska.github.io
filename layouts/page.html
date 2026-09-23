@@ -1,0 +1,32 @@
+{{ define "main" }}
+<article class="section">
+  <div class="wrap">
+    <p class="label">
+      <a href="{{ .Parent.RelPermalink }}">{{ .Parent.Title }}</a>
+      &middot; {{ .Date.Format "2 January 2006" }}
+    </p>
+    <h1 class="page-title">{{ .Title }}</h1>
+
+    {{- with .Params.venue }}<p class="page-venue"><cite>{{ . }}</cite></p>{{ end }}
+    {{- with .Params.event }}<p class="page-venue">{{ . }}{{ with $.Params.location }} &middot; {{ . }}{{ end }}</p>{{ end }}
+
+    {{- $links := slice }}
+    {{- with .Params.link }}{{ $links = $links | append (dict "label" "Read" "url" .) }}{{ end }}
+    {{- with .Params.doi }}{{ $links = $links | append (dict "label" (printf "DOI %s" .) "url" (printf "https://doi.org/%s" .)) }}{{ end }}
+    {{- with .Params.external_link }}{{ $links = $links | append (dict "label" "Project site" "url" .) }}{{ end }}
+    {{- with .Params.slides }}{{ with $.Resources.Get . }}{{ $links = $links | append (dict "label" "Slides" "url" .RelPermalink) }}{{ end }}{{ end }}
+    {{- with $links }}
+    <p class="entry-links">
+      {{- range . }}<a class="chip" href="{{ .url }}"{{ partial "extlink.html" .url | safeHTMLAttr }}>{{ .label }}</a>{{ end }}
+    </p>
+    {{- end }}
+
+    {{- with .Params.abstract }}
+    <div class="prose page-abstract"><p>{{ . }}</p></div>
+    {{- end }}
+    {{- with .Content }}
+    <div class="prose">{{ . }}</div>
+    {{- end }}
+  </div>
+</article>
+{{ end }}

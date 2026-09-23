@@ -1,0 +1,55 @@
+{{- $fonts := dict
+      "archivo"     (resources.Get "fonts/archivo.woff2").RelPermalink
+      "sourceserif" (resources.Get "fonts/sourceserif.woff2").RelPermalink
+      "plexmono"    (resources.Get "fonts/plexmono.woff2").RelPermalink -}}
+{{- $css := resources.Get "css/main.css"
+      | resources.ExecuteAsTemplate "css/main.css" (dict "fonts" $fonts) -}}
+{{- /* Only the dev server skips this. Gating on hugo.IsProduction would leave
+       the staging build serving unminified, unfingerprinted CSS, which is not
+       what ships and so not what should be reviewed. */ -}}
+{{- if not hugo.IsServer -}}
+  {{- $css = $css | minify | fingerprint -}}
+{{- end -}}
+
+{{- /* Description falls back through page summary, then site tagline. */ -}}
+{{- $desc := .Description | default .Summary | default site.Params.description -}}
+{{- $title := cond .IsHome site.Title (printf "%s | %s" .Title site.Title) -}}
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $desc | plainify | truncate 180 }}">
+<link rel="canonical" href="{{ .Permalink }}">
+{{- if ne hugo.Environment "production" }}
+{{- /* The staging vhost is real HTTPS on a resolvable name, and canonical and
+       og:url below carry that host, so keep it out of the index. */}}
+<meta name="robots" content="noindex, nofollow">
+{{- end }}
+
+{{- /* Self-hosted, so preload rather than waiting on the CSS to discover them. */}}
+<link rel="preload" as="font" type="font/woff2" href="{{ $fonts.archivo }}" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="{{ $fonts.sourceserif }}" crossorigin>
+<link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ with $css.Data.Integrity }} integrity="{{ . }}"{{ end }}>
+
+<meta property="og:type" content="{{ cond .IsPage "article" "website" }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $desc | plainify | truncate 180 }}">
+<meta property="og:url" content="{{ .Permalink }}">
+{{- with site.Params.portrait }}{{ with resources.Get . }}
+{{- $og := .Process "resize 1200x630 webp q85 smart" }}
+<meta property="og:image" content="{{ $og.Permalink }}">
+{{- end }}{{ end }}
+<meta name="twitter:card" content="summary_large_image">
+
+{{ with .OutputFormats.Get "rss" -}}
+<link rel="alternate" type="application/rss+xml" href="{{ .Permalink }}" title="{{ site.Title }}">
+{{- end }}
+
+{{- /* Set the theme before first paint so a dark-mode reader never sees a
+       white flash. Kept inline and tiny for exactly that reason. */}}
+<script>
+(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+</head>
