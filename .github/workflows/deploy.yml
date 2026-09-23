@@ -25,13 +25,18 @@ jobs:
         with:
           submodules: false
 
-      # Pinned to the same image as docker-compose.yml. Academic 4.3.1 breaks on
-      # newer Hugo, and the theme needs the extended build for its SCSS.
+      # Pinned to the same image as docker-compose.yml. The theme needs the
+      # extended build for its SCSS. Run as the runner's own user so the
+      # generated `public` is writable, and keep the cache off the image's
+      # root-owned /cache for the same reason.
       - name: Build
         run: |
-          docker run --rm -v "$PWD:/src" \
-            hugomods/hugo:0.116.1 \
-            hugo --gc --minify --cleanDestinationDir
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -e HUGO_CACHEDIR=/tmp/hugo-cache \
+            -v "$PWD:/project" -w /project \
+            ghcr.io/gohugoio/hugo:v0.166.0 \
+            --gc --minify --cleanDestinationDir
 
       - uses: actions/upload-pages-artifact@v3
         with:

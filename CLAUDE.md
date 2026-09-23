@@ -7,20 +7,24 @@ Pages.
 
 ## Commands
 
-Run the dev server through Docker, which pins the only Hugo version this site builds on:
+Run the dev server through Docker, which pins the Hugo version CI also uses:
 
 ```sh
-docker compose up   # hugomods/hugo:0.116.1, drafts included, http://localhost:1313
+docker compose up   # ghcr.io/gohugoio/hugo:v0.166.0, drafts included, http://localhost:1313
 ```
-
-**Do not run the system `hugo`.** It is far newer (0.162.x) and the Academic 4.3.1 theme breaks on
-it. Always go through Docker so the pinned version is the one that builds.
 
 Production build, same pinned image:
 
 ```sh
-docker compose run --rm server hugo --gc --minify
+docker compose run --rm server --gc --minify
 ```
+
+The image entrypoint is Hugo itself, so subcommands and flags are passed without a leading `hugo`.
+
+The system `hugo` works too and is fine for a quick check. This repo was pinned to 0.116.1 for
+years on the belief that Academic 4.3.1 broke on anything newer. That is not true. The theme needed
+five removed site variables remapped, which `layouts/` now shadows, and one content date corrected.
+Prefer Docker anyway so local output matches CI.
 
 There are no tests or linters. CI is a single workflow, see Deployment.
 
@@ -42,7 +46,7 @@ target: set Settings -> Pages -> Source back to "Deploy from a branch" and pick 
 ## Architecture
 
 The theme is **Wowchemy/Academic v4.3.1**, vendored as ordinary tracked files at `themes/academic`.
-Never edit it. This repo has no git submodules. `themes/helen-2024` is empty and unused.
+Never edit it. This repo has no git submodules.
 
 **Config** is split across `config/_default/`. `config.toml` holds site settings, taxonomies and
 `ignoreFiles`; `params.toml` holds theme options, contact details and `plugins_css`; `menus.toml`
@@ -69,6 +73,14 @@ Everything in `layouts/` shadows the matching path under `themes/academic/layout
 copy the theme file to the same path here and edit the copy. `i18n/en.yaml` overrides theme
 strings the same way, and `assets/css/custom.css` is loaded via `plugins_css = ["custom"]` in
 `params.toml`.
+
+Seven of the shadows exist only to keep the theme building on current Hugo, and carry no design
+change. `_default/baseof.html`, `_default/rss.xml`, `slides/baseof.html`, `partials/site_head.html`,
+`partials/site_js.html`, `partials/comments.html` and `partials/page_metadata.html` remap
+`site.IsServer`, `site.GoogleAnalytics`, `site.DisqusShortname`, `site.LanguageCode` and
+`site.Author`, all of which Hugo removed. `rss.xml` also drops the theme's `managingEditor`,
+`webMaster` and `author` elements, which were empty before and would otherwise start publishing a
+contact address.
 
 Helen's profile and CV live in `content/authors/helen/`. The CV filename carries a date, so
 replacing it means updating the reference in `_index.md` too.

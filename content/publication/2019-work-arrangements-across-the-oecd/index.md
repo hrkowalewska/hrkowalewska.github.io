@@ -3,7 +3,7 @@
 
 title: "Work/Family Arrangements across the OECD: Incorporating the Female-Breadwinner Model"
 authors: ["helen", "agnese"]
-date: 
+date: 2019-01-01T00:00:00+01:00
 doi: ""
 
 # Schedule page publish date (NOT publication's date).

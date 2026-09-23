@@ -2,10 +2,18 @@ name: helenkowalewska.uk
 
 services:
   server:
-    image: hugomods/hugo:0.116.1
-    command: hugo server -D --bind 0.0.0.0
+    # Official image from the Hugo project, extended build (the theme needs SCSS).
+    # Kept in step with the version in .github/workflows/deploy.yml.
+    image: ghcr.io/gohugoio/hugo:v0.166.0
+    # The image entrypoint is Hugo itself, so this starts at the subcommand.
+    command: server -D --bind 0.0.0.0
+    working_dir: /project
     volumes:
-      - ./:/src
-      - ~/hugo_cache:/tmp/hugo_cache
+      - ./:/project
+      # Named volume rather than a host path, so the image's non-root user can write it.
+      - hugo_cache:/cache
     ports:
       - 1313:1313
+
+volumes:
+  hugo_cache:

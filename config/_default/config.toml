@@ -57,8 +57,12 @@ ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "
 
 [imaging]
   resampleFilter = "lanczos"
-  quality = 90
   anchor = "smart"  # Anchor for cropping. Options include Smart and Center.
+  # A single top-level `quality` was deprecated in Hugo 0.163.0; it is now set per format.
+  [imaging.jpeg]
+    quality = 90
+  [imaging.webp]
+    quality = 90
 
 # Taxonomies.
 [taxonomies]
