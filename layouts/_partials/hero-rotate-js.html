@@ -1,11 +1,15 @@
 <script>
-// Steps the hero through each question once, about five seconds apart, then
-// stops on the last. Deliberately not a loop: a heading that never settles is
-// a distraction beside body copy, and an indefinite one would need a visible
-// pause control under WCAG 2.2.2.
+// Steps the hero through each question once, seven seconds apart, then stops on
+// the last. Deliberately not a loop: a heading that never settles is a
+// distraction beside body copy.
 //
-// The stylesheet's global reduced-motion block kills the crossfade but cannot
-// stop a timer, so the motion preference is checked here too.
+// Three states rather than two, because a span needs to know which way it is
+// going: waiting off to the right, current, or leaving to the left. The leaving
+// class is cleared once the slide finishes so the span returns to the waiting
+// position rather than sitting on the wrong side.
+//
+// The stylesheet's global reduced-motion block kills the slide but cannot stop
+// a timer, so the motion preference is checked here too.
 (function () {
   var h = document.getElementById('hero-statement');
   if (!h) return;
@@ -16,11 +20,18 @@
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
   if (reduce && reduce.matches) return;
 
-  var i = 0, timer = null, HOLD = 5000;
+  var i = 0, timer = null;
+  var HOLD = 7000;    // how long each question is readable
+  var SLIDE = 600;    // a little longer than the transform in the stylesheet
 
   function show(next) {
-    lines[i].className = '';
-    lines[i].setAttribute('aria-hidden', 'true');
+    var out = lines[i];
+    out.className = 'is-leaving';
+    out.setAttribute('aria-hidden', 'true');
+    setTimeout(function () {
+      if (out.className === 'is-leaving') out.className = '';
+    }, SLIDE);
+
     lines[next].className = 'is-current';
     lines[next].removeAttribute('aria-hidden');
     i = next;

@@ -94,7 +94,7 @@ grant means adding three lines of YAML.
 
 **The hero rotates.** Every question in `data/statements.yaml` renders into the `h1`, stacked in one
 grid cell so the hero reserves the height of the tallest and the rotation cannot move the bottom rule
-or the anchored portrait. `hero-rotate-js.html` steps through them once, five seconds apart, and
+or the anchored portrait. `hero-rotate-js.html` steps through them once, seven seconds apart, and
 stops on the last; it moves `is-current` and `aria-hidden` together so the heading always has exactly
 one accessible name. It does nothing at all under `prefers-reduced-motion`, which the stylesheet's
 global block cannot cover because that kills transitions but not timers. Without JavaScript the first
