@@ -381,8 +381,11 @@ img { max-width: 100%; height: auto; display: block; }
 .stack { display: flex; flex-direction: column; max-width: 46rem; }
 .stack-item {
   padding-block: 0.9rem; border-bottom: 1px solid var(--rule);
-  display: grid; grid-template-columns: 4.25rem 1fr; gap: 0 1rem;
+  display: grid; grid-template-columns: var(--stack-when, 4.25rem) 1fr; gap: 0 1rem;
 }
+/* A list showing spans needs room for "2019–2022", not just "2019". Set on the
+   list so the single-year lists keep their tighter column. */
+.stack-span { --stack-when: 6rem; }
 .stack-item:first-child { border-top: 1px solid var(--rule); }
 .stack-when { font-family: var(--font-mono); font-size: 0.75rem; font-variant-numeric: tabular-nums; color: var(--ink-faint); padding-top: 0.2rem; }
 .stack-what { font-family: var(--font-display); font-size: 0.95rem; font-weight: 500; line-height: 1.35; margin: 0; }
@@ -488,6 +491,14 @@ img { max-width: 100%; height: auto; display: block; }
 /* The header above is centred, so centre the measure under it rather than
    leaving the prose hard against the left edge of a 74rem wrap. */
 .profile-body .prose { margin-inline: auto; }
+
+/* Lists on this page centre as blocks to match, but their rows stay
+   left-aligned: centring a date column against its title would be unreadable.
+   The accent stub is absolutely positioned at the left of its heading, so it
+   needs centring explicitly or it would sit off to one side. */
+.profile-list .section-head { justify-content: center; }
+.profile-list .section-head h2::before { left: 50%; transform: translateX(-50%); }
+.profile-list .stack { margin-inline: auto; }
 
 /* --- list pages ---------------------------------------------------------- */
 

@@ -38,4 +38,18 @@
   </div>
 </section>
 {{- end }}
+
+{{- /* Gated on a page field rather than rendered for every author, or a
+       co-author's page would list Helen's posts under their name. Same reason
+       the portrait is page-specific. */ -}}
+{{- if .Params.show_experience }}
+{{- with hugo.Data.experience }}
+<section class="section accent-alt profile-list">
+  <div class="wrap">
+    <div class="section-head"><h2>Experience</h2></div>
+    {{ partial "stack.html" . }}
+  </div>
+</section>
+{{- end }}
+{{- end }}
 {{ end }}

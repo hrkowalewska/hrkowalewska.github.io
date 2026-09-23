@@ -89,12 +89,18 @@ overrides the page URL), **`pubtype`** (not `type`, which drives layout lookup) 
 `kind`, removed as a front-matter key in Hugo 0.144).
 
 **Hand-maintained lists live in `data/`**, not in content. `teaching.yaml` and `grants.yaml` each
-feed their own homepage section and their own page, `/teaching/` and `/awards/`; `statements.yaml`
-holds the hero questions. Adding a grant means adding three lines of YAML.
+feed their own homepage section and their own page, `/teaching/` and `/awards/`; `experience.yaml`
+renders as Experience on the About page; `statements.yaml` holds the hero questions. Adding a grant
+means adding three lines of YAML.
+
+Experience is gated on `show_experience` in Helen's front matter, so a co-author's page does not
+list her posts under their name. The portrait is page-specific for the same reason.
 
 `grants.yaml` mixes funding with honours, which is why its heading is "Grants and awards" rather than
-naming one or the other. `_partials/stack.html` renders a dated list and is shared by all four
-places these appear, so the caller slices the data and the partial does the markup.
+naming one or the other. `_partials/stack.html` renders a dated list and is shared by every place
+these appear, so the caller slices the data and the partial does the markup. An entry may carry `end`
+to show a span instead of a year; the partial widens its date column by itself when any entry has
+one, so callers pass nothing extra.
 
 **The hero rotates.** Every question in `data/statements.yaml` renders into the `h1`, stacked in one
 grid cell so the hero reserves the height of the tallest and the rotation cannot move the bottom rule

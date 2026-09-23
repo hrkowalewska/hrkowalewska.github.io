@@ -1,27 +1,32 @@
-# Roles held, most recent first. Rendered by layouts/partials/home-*.html.
-# `end` empty means current.
-- role: "Lecturer (Assistant Professor)"
-  org: "Department of Social and Policy Sciences"
-  place: "University of Bath"
-  start: "2022-07-07"
+# Posts held, most recent first. Rendered as Experience on the About page by
+# layouts/authors/section.html, via _partials/stack.html.
+#
+# Same shape as teaching.yaml and grants.yaml, with one addition: `end`. Present
+# and empty means the post is current and the list shows "2022–"; present with a
+# date shows a range; absent shows a single year. The partial widens its date
+# column automatically when any entry carries an `end`.
+
+- title: "Assistant Professor in Sociology and Social Policy"
+  org: "Department of Social and Policy Sciences, University of Bath"
+  date: "2022-07-07"
   end: ""
-- role: "Postdoctoral Research Officer"
-  org: "Oxford Martin Programme on Inequality and Prosperity"
-  place: "University of Oxford"
-  start: "2019-08-27"
+
+- title: "Postdoctoral Research Officer"
+  org: "Oxford Martin Programme on Inequality and Prosperity, University of Oxford"
+  date: "2019-08-27"
   end: "2022-07-06"
-- role: "Postdoctoral Research Fellow"
-  org: "Economic and Social Research Council (ESRC)"
-  place: "University of Southampton"
-  start: "2018-10-01"
+
+- title: "Postdoctoral Research Fellow"
+  org: "Economic and Social Research Council (ESRC), University of Southampton"
+  date: "2018-10-01"
   end: "2019-08-26"
-- role: "Research Fellow"
-  org: "ESRC-funded project ‘Female-Breadwinner Families in Europe’"
-  place: "University of Southampton"
-  start: "2018-04-01"
+
+- title: "Research Fellow"
+  org: "ESRC-funded project ‘Female-Breadwinner Families in Europe’, University of Southampton"
+  date: "2018-04-01"
   end: "2018-09-25"
-- role: "Researcher"
+
+- title: "Researcher"
   org: "Ministry of Housing, Communities and Local Government"
-  place: ""
-  start: "2017-10-01"
+  date: "2017-10-01"
   end: "2018-03-31"
