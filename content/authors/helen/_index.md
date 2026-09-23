@@ -1,5 +1,10 @@
 ---
 title: "Helen Kowalewska"
+# Kept separate from `title` rather than folded into it: the title is her name
+# as an identifier, used for co-author credits and page titles, and prefixing it
+# there would give the About page a <title> of "Dr Helen Kowalewska | Helen
+# Kowalewska".
+honorific: "Dr"
 role: "Assistant Professor in Sociology and Social Policy"
 affiliation: "University of Bath"
 affiliation_url: "https://www.bath.ac.uk"

@@ -22,7 +22,7 @@
         {{- end }}
       </h1>
       <p class="hero-meta">
-        <strong>{{ $helen.Title }}</strong>
+        <strong>{{ with $helen.Params.honorific }}{{ . }} {{ end }}{{ $helen.Title }}</strong>
         {{- /* Her title is self-contained; appending the department would read
                "...Sociology and Social Policy, Department of Social and Policy
                Sciences". The department is named and linked in the footer. */}}
