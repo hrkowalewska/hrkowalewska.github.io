@@ -378,6 +378,18 @@ img { max-width: 100%; height: auto; display: block; }
 
 .prose { max-width: var(--measure); }
 .prose p { margin: 0 0 1.1rem; }
+/* The base heading rule zeroes every margin, which is right for headings the
+   templates position themselves but wrong inside body copy, where they had no
+   size and no space around them at all. */
+.prose h2 {
+  font-size: clamp(1.15rem, 1.05rem + 0.4vw, 1.35rem);
+  margin: 2.25rem 0 0.75rem;
+}
+.prose h3 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.6rem;
+}
+.prose > :first-child { margin-top: 0; }
 .prose p:last-child { margin-bottom: 0; }
 .prose a { color: var(--series-a); text-decoration-color: var(--series-a-dim); }
 .prose a:hover { text-decoration-color: var(--series-a); }

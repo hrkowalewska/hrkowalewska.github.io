@@ -27,6 +27,6 @@ Independent](https://www.independent.co.uk/news/uk/home-news/unemployed-men-masc
 and the
 [BBC](https://www.bbc.co.uk/future/article/20250519-why-money-and-power-affects-male-self-esteem).
 
-#### Curriculum vitae
+## Curriculum vitae
 
 [Download my CV (PDF)](/authors/helen/Helen.Kowalewska.CV.Sep.2026.pdf)
