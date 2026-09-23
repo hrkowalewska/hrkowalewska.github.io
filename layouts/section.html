@@ -1,15 +1,26 @@
 {{ define "main" }}
 <section class="page-head">
   <div class="wrap">
-    <p class="label">{{ len .Pages }} items{{ with .Pages }} &middot; {{ (index (sort . "Date") 0).Date.Year }}&ndash;{{ (index (sort . "Date" "desc") 0).Date.Year }}{{ end }}</p>
+    {{- /* Author pages are sections too, but they hold no child pages: they
+           exist to carry a name for co-author credits, the bio, and the CV
+           file. Only a real listing gets a count and a year range. */ -}}
+    {{- with .Pages }}
+    <p class="label">{{ len . }} items &middot; {{ (index (sort . "Date") 0).Date.Year }}&ndash;{{ (index (sort . "Date" "desc") 0).Date.Year }}</p>
+    {{- end }}
     <h1>{{ .Title }}</h1>
+    {{- with .Params.role }}
+    <p class="page-venue">
+      {{ . }}{{ with $.Params.affiliation }}, {{ with $.Params.affiliation_url }}<a href="{{ . }}"{{ partial "extlink.html" . | safeHTMLAttr }}>{{ end }}{{ . }}{{ if $.Params.affiliation_url }}</a>{{ end }}{{ end }}
+    </p>
+    {{- end }}
     {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
   </div>
 </section>
 
-<section class="section{{ if eq .Section "media" }} series-b{{ end }}">
+{{- with .Pages }}
+<section class="section{{ if eq $.Section "media" }} series-b{{ end }}">
   <div class="wrap">
-    {{- range .Pages.GroupByDate "2006" }}
+    {{- range .GroupByDate "2006" }}
     <div class="year-group">
       <h2 class="year-heading">{{ .Key }}</h2>
       <div class="ledger">
@@ -21,4 +32,5 @@
     {{- end }}
   </div>
 </section>
+{{- end }}
 {{ end }}

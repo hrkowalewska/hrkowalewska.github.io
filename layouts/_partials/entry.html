@@ -67,7 +67,7 @@
       {{- if ne $slug "helen" -}}
         {{- $name := $slug -}}
         {{- with site.GetPage (printf "/authors/%s" $slug) -}}
-          {{- $name = .Params.name | default .Title | default $slug -}}
+          {{- $name = .Title | default $slug -}}
         {{- end -}}
         {{- $others = $others | append $name -}}
       {{- end -}}

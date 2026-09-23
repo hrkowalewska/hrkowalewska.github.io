@@ -13,8 +13,11 @@
       </p>
       <h1 class="hero-statement">{{ site.Params.statement | markdownify }}</h1>
       <p class="hero-meta">
-        <strong>{{ $helen.Params.name }}</strong>
-        <span>{{ $helen.Params.role }}, {{ site.Params.department }}</span>
+        <strong>{{ $helen.Title }}</strong>
+        {{- /* Her title is self-contained; appending the department would read
+               "...Sociology and Social Policy, Department of Social and Policy
+               Sciences". The department is named and linked in the footer. */}}
+        <span>{{ $helen.Params.role }}</span>
         {{- with site.Params.editorship }}<span>{{ . | markdownify }}</span>{{ end }}
       </p>
     </div>
@@ -22,7 +25,7 @@
     {{- $hero := .Process "resize 1120x webp q82" }}
     <figure class="hero-portrait">
       <img src="{{ $hero.RelPermalink }}" width="{{ $hero.Width }}" height="{{ $hero.Height }}"
-           alt="{{ $helen.Params.name }}, {{ $helen.Params.role }} at the {{ site.Params.institution }}">
+           alt="{{ $helen.Title }}, {{ $helen.Params.role }} at the {{ site.Params.institution }}">
     </figure>
     {{- end }}
   </div>

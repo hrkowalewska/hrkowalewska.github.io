@@ -13,7 +13,12 @@
 
 {{- /* Description falls back through page summary, then site tagline. */ -}}
 {{- $desc := .Description | default .Summary | default site.Params.description -}}
-{{- $title := cond .IsHome site.Title (printf "%s | %s" .Title site.Title) -}}
+{{- /* The site is named after Helen, so her own author page would otherwise
+       read "Helen Kowalewska | Helen Kowalewska". */ -}}
+{{- $title := site.Title -}}
+{{- if and (not .IsHome) (ne .Title site.Title) -}}
+  {{- $title = printf "%s | %s" .Title site.Title -}}
+{{- end -}}
 
 <head>
 <meta charset="utf-8">
