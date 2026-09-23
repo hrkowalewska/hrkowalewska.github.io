@@ -1,0 +1,46 @@
+{{ define "main" }}
+{{- /* The teaching and recognition lists live in data/, not in content, so this
+       section has no child pages and needs its own template rather than the
+       generic listing. The homepage shows the first few of each and links
+       here for the rest. */ -}}
+<section class="page-head">
+  <div class="wrap">
+    <h1>{{ .Title }}</h1>
+    {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head"><h2>Teaching</h2></div>
+    <div class="stack">
+      {{- range hugo.Data.teaching }}
+      <div class="stack-item">
+        <span class="stack-when">{{ substr .date 0 4 }}</span>
+        <div>
+          <p class="stack-what">{{ .title }}</p>
+          <p class="stack-where">{{ .org }}{{ with .note }} &middot; {{ . | markdownify }}{{ end }}</p>
+        </div>
+      </div>
+      {{- end }}
+    </div>
+  </div>
+</section>
+
+<section class="section series-b">
+  <div class="wrap">
+    <div class="section-head"><h2>Grants &amp; prizes</h2></div>
+    <div class="stack">
+      {{- range hugo.Data.grants }}
+      <div class="stack-item">
+        <span class="stack-when">{{ substr .date 0 4 }}</span>
+        <div>
+          <p class="stack-what">{{ .title }}</p>
+          <p class="stack-where">{{ .org }}{{ with .note }} &middot; {{ . | markdownify }}{{ end }}</p>
+        </div>
+      </div>
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{ end }}

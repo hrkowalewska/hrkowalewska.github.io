@@ -80,7 +80,10 @@
 
 <section class="section" id="teaching">
   <div class="wrap">
-    <div class="section-head"><h2>Teaching &amp; recognition</h2></div>
+    <div class="section-head">
+      <h2>Teaching &amp; recognition</h2>
+      <a class="more" href="{{ "/teaching/" | relURL }}">All teaching and awards &rarr;</a>
+    </div>
     <div class="cols">
       <div>
         <h3 class="label">Teaching</h3>
@@ -116,7 +119,10 @@
 
 <section class="section" id="about">
   <div class="wrap">
-    <div class="section-head"><h2>About</h2></div>
+    <div class="section-head">
+      <h2>About</h2>
+      <a class="more" href="{{ $helen.RelPermalink }}">More about Helen &rarr;</a>
+    </div>
     <div class="about-grid">
       {{- with resources.Get site.Params.portrait }}
       {{- $sq := .Process "fill 720x720 webp q82 smart" }}
@@ -125,7 +131,7 @@
       </figure>
       {{- end }}
       <div class="prose">
-        {{ $helen.Content }}
+        {{ $helen.Summary }}
       </div>
     </div>
   </div>

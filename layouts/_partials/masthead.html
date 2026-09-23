@@ -2,8 +2,16 @@
   <div class="wrap">
     <a class="masthead-name" href="{{ "/" | relURL }}">{{ site.Title }}</a>
     <nav aria-label="Sections">
-      {{- range site.Menus.main }}
-      <a href="{{ .URL | relURL }}"{{ if $.IsDescendant .Page }} aria-current="page"{{ end }}>{{ .Name }}</a>
+      {{- /* Menu entries are defined by URL in menus.toml, so they carry no
+             .Page and neither .IsDescendant nor .IsMenuCurrent matches. Compare
+             the paths directly: exact match for the section page itself, prefix
+             match so its children stay marked too. Every menu URL ends in a
+             slash, which stops /talk/ matching something like /talks-other/. */ -}}
+      {{- $here := .RelPermalink -}}
+      {{- range site.Menus.main -}}
+        {{- $url := .URL | relURL -}}
+        {{- $current := or (eq $here $url) (and (ne $url "/") (hasPrefix $here $url)) }}
+      <a href="{{ $url }}"{{ if $current }} aria-current="page"{{ end }}>{{ .Name }}</a>
       {{- end }}
     </nav>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Dark</button>

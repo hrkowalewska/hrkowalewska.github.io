@@ -3,6 +3,7 @@ title: "Helen Kowalewska"
 role: "Assistant Professor in Sociology and Social Policy"
 affiliation: "University of Bath"
 affiliation_url: "https://www.bath.ac.uk"
+aliases: ["/about/"]
 ---
 My research examines women's employment across industrialised countries and how social policies
 reduce or potentially increase gender inequalities in paid work. I currently hold a [BA/Leverhulme
@@ -11,6 +12,8 @@ women's labour market experiences and have recently completed a [New Investigato
 Grant](/project/esrc-new-investigators-grant/) funded by the Economic and Social Research Council. I
 am also an Associate Editor for the [Journal of Family
 Studies](https://www.tandfonline.com/journals/rjfs20/about-this-journal).
+
+<!--more-->
 
 My research has been published in [European Sociological
 Review](https://doi.org/10.1093/esr/jcad034), [Work, Employment &

@@ -27,6 +27,12 @@
           {{- range site.Menus.main }}
           <a href="{{ .URL | relURL }}">{{ .Name }}</a>
           {{- end }}
+          {{- /* Take part is a recruitment call rather than a standing section,
+                 so it lives here rather than in the nav. Without this it has no
+                 inbound link from anywhere on the site. */ -}}
+          {{- with site.GetPage "/take-part" }}
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          {{- end }}
         </div>
       </div>
     </div>

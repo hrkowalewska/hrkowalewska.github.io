@@ -1,4 +1,4 @@
 ---
-title: "Teaching"
+title: "Teaching & recognition"
 ---
-Current and previous teaching. Unit handbooks are linked from the homepage.
+Units convened and taught, and the grants, prizes and nominations that have supported the work.

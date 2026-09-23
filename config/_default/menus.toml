@@ -1,5 +1,8 @@
 # Real section pages, not homepage anchors. The old menu pointed "Publications"
 # at #featured, which showed only pages with `featured: true` — exactly one.
+#
+# Every homepage section has a destination here, so nothing on the site is
+# reachable only by scrolling.
 
 [[main]]
   name = "Publications"
@@ -21,8 +24,18 @@
   url = "/project/"
   weight = 40
 
+[[main]]
+  name = "Teaching"
+  url = "/teaching/"
+  weight = 50
+
+[[main]]
+  name = "About"
+  url = "/authors/helen/"
+  weight = 60
+
 # The News section is retired; see ignoreFiles in config.toml.
 # [[main]]
 #   name = "News"
 #   url = "/post/"
-#   weight = 50
+#   weight = 70
