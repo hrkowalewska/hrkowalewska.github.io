@@ -3,3 +3,7 @@ resources/
 public/
 .DS_Store
 .hugo_build.lock
+
+# Holds the staging rsync target. This repo is public, so the home server
+# address stays out of it. See .env.example.
+.env

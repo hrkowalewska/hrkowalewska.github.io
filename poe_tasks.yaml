@@ -1,0 +1,53 @@
+# Task runner for this site. Run with `poe <task>`; `poe` on its own lists them.
+#
+# poethepoet picks this file up automatically (it searches pyproject.toml,
+# poe_tasks.toml, poe_tasks.yaml, poe_tasks.json), so the repo needs no Python
+# packaging. Install it with `uv tool install poethepoet` or `pipx install
+# poethepoet`.
+#
+# Every build goes through the pinned Hugo image in docker-compose.yml, so local
+# output matches CI. The image entrypoint is Hugo itself, hence no leading
+# `hugo` in the commands below.
+
+envfile: .env
+
+tasks:
+  up:
+    help: Dev server with drafts at http://localhost:1313
+    cmd: docker compose up
+
+  down:
+    help: Stop the dev server
+    cmd: docker compose down
+
+  build:
+    help: Production build into public/
+    cmd: docker compose run --rm server --gc --minify --cleanDestinationDir
+
+  clean:
+    help: Remove build output and the image-processing cache
+    cmd: rm -rf public resources
+
+  staging-build:
+    help: Build for the staging host, with a noindex tag
+    cmd: >
+      docker compose run --rm server
+      --environment staging --gc --minify --cleanDestinationDir
+
+  staging-push:
+    help: Sync public/ to the home server
+    # CNAME is excluded because static/CNAME exists only to assert the custom
+    # domain on GitHub Pages; it means nothing here and only invites confusion.
+    #
+    # No --chmod: macOS ships openrsync, which does not support it, and Hugo
+    # already writes 755 directories and 644 files, which is what it would set.
+    cmd: >
+      rsync -az --delete --exclude CNAME
+      public/ ${STAGING_TARGET}
+
+  staging:
+    help: Build and publish the staging site for Helen to review
+    sequence: [staging-build, staging-push]
+    # Without this, poe reads bare strings in a sequence as shell commands
+    # rather than references to the tasks above.
+    default_item_type: ref
