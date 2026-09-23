@@ -11,7 +11,16 @@
         <span class="label">{{ site.Params.field }}</span>
         <span class="label">{{ site.Params.institution }}</span>
       </p>
-      <h1 class="hero-statement">{{ site.Params.statement | markdownify }}</h1>
+      {{- /* Every question renders, stacked in a single grid cell, so the hero
+             reserves the height of the tallest and the cycle shifts nothing.
+             Only the current one is opaque; the rest are hidden from assistive
+             technology so the heading has exactly one accessible name.
+             Without JavaScript the first simply stays put. */ -}}
+      <h1 class="hero-statement" id="hero-statement">
+        {{- range $i, $q := hugo.Data.statements }}
+        <span{{ if eq $i 0 }} class="is-current"{{ else }} aria-hidden="true"{{ end }}>{{ $q | markdownify }}</span>
+        {{- end }}
+      </h1>
       <p class="hero-meta">
         <strong>{{ $helen.Title }}</strong>
         {{- /* Her title is self-contained; appending the department would read

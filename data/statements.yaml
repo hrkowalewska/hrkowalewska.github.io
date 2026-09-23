@@ -1,0 +1,17 @@
+# Hero questions. The homepage steps through these once, about five seconds
+# apart, and settles on the last, so put the one that should linger at the end.
+#
+# Each is a question the research asks, drawn from a real paper. Markdown: wrap
+# a phrase in *asterisks* to pick it out in the teal accent.
+#
+# Keep them roughly the same length. They are stacked in one grid cell so the
+# hero reserves the height of the longest, and a much longer entry would leave
+# visible slack under the shorter ones.
+#
+# One entry is fine; the rotation simply does nothing.
+
+- "How do patterns of *women’s employment* vary across countries?"
+- "What happens to income and wellbeing when *women out-earn male partners*?"
+- "Do employers see maternity leave as a right or a *risk to manage*?"
+- "Why doesn’t earning more *lighten mothers’ mental load*?"
+- "What is job-seeking like for *women over the age of 50*?"

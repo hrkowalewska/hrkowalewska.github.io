@@ -1,0 +1,50 @@
+<script>
+// Steps the hero through each question once, about five seconds apart, then
+// stops on the last. Deliberately not a loop: a heading that never settles is
+// a distraction beside body copy, and an indefinite one would need a visible
+// pause control under WCAG 2.2.2.
+//
+// The stylesheet's global reduced-motion block kills the crossfade but cannot
+// stop a timer, so the motion preference is checked here too.
+(function () {
+  var h = document.getElementById('hero-statement');
+  if (!h) return;
+
+  var lines = h.getElementsByTagName('span');
+  if (lines.length < 2) return;
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (reduce && reduce.matches) return;
+
+  var i = 0, timer = null, HOLD = 5000;
+
+  function show(next) {
+    lines[i].className = '';
+    lines[i].setAttribute('aria-hidden', 'true');
+    lines[next].className = 'is-current';
+    lines[next].removeAttribute('aria-hidden');
+    i = next;
+  }
+
+  function step() {
+    if (i + 1 >= lines.length) { stop(); return; }
+    show(i + 1);
+  }
+
+  function start() {
+    if (!timer && i + 1 < lines.length) timer = setInterval(step, HOLD);
+  }
+
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  // Pause while the reader is looking at or tabbing through the hero.
+  h.addEventListener('mouseenter', stop);
+  h.addEventListener('mouseleave', start);
+  h.addEventListener('focusin', stop);
+  h.addEventListener('focusout', start);
+
+  start();
+})();
+</script>

@@ -10,8 +10,8 @@ department  = "Department of Social and Policy Sciences"
 department_url = "https://www.bath.ac.uk/departments/department-of-social-policy-sciences/"
 editorship  = "Associate Editor, *Journal of Family Studies*"
 
-# The hero line. Markdown; wrap the phrase to pick up the accent colour in *emphasis*.
-statement = "Why do women's working lives still differ so much *from one country to the next*?"
+# The hero questions live in data/statements.yaml, since they are a list Helen
+# edits rather than site configuration.
 
 # Contact
 email = "hk775@bath.ac.uk"

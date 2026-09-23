@@ -210,7 +210,19 @@ img { max-width: 100%; height: auto; display: block; }
 .hero-statement {
   font-size: clamp(1.7rem, 1.05rem + 2.7vw, 3.15rem);
   font-weight: 600; max-width: 20ch; letter-spacing: -0.025em;
+  /* Every question occupies the same cell, so the row takes the height of the
+     tallest and the rotation cannot move the hero's bottom rule, the anchored
+     portrait, or anything below them. */
+  display: grid;
 }
+.hero-statement > span {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  /* Moved off the h1: the spans are the block containers now. */
+  text-wrap: balance;
+}
+.hero-statement > span.is-current { opacity: 1; }
 /* The one moment of colour in the hero: the comparative claim itself. */
 .hero-statement em { font-style: normal; color: var(--series-a); }
 .hero-meta {

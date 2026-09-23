@@ -88,8 +88,17 @@ chosen to dodge Hugo reserved keys and must not be renamed back: **`link`** (not
 overrides the page URL), **`pubtype`** (not `type`, which drives layout lookup) and **`medium`** (not
 `kind`, removed as a front-matter key in Hugo 0.144).
 
-**Hand-maintained lists live in `data/`**, not in content. `experience.yaml`, `grants.yaml` and
-`teaching.yaml` are read directly by `home.html`. Adding a grant means adding three lines of YAML.
+**Hand-maintained lists live in `data/`**, not in content. `grants.yaml` and `teaching.yaml` are read
+by `home.html` and `teaching/section.html`; `statements.yaml` holds the hero questions. Adding a
+grant means adding three lines of YAML.
+
+**The hero rotates.** Every question in `data/statements.yaml` renders into the `h1`, stacked in one
+grid cell so the hero reserves the height of the tallest and the rotation cannot move the bottom rule
+or the anchored portrait. `hero-rotate-js.html` steps through them once, five seconds apart, and
+stops on the last; it moves `is-current` and `aria-hidden` together so the heading always has exactly
+one accessible name. It does nothing at all under `prefers-reduced-motion`, which the stylesheet's
+global block cannot cover because that kills transitions but not timers. Without JavaScript the first
+question simply stays.
 
 **Styling** is one hand-written file, `assets/css/main.css`, run through `resources.ExecuteAsTemplate`
 so it can interpolate the self-hosted font URLs from `assets/fonts/`. No Sass, no Tailwind, no build
