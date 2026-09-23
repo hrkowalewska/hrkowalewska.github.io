@@ -3,6 +3,7 @@ title: "Helen Kowalewska"
 role: "Assistant Professor in Sociology and Social Policy"
 affiliation: "University of Bath"
 affiliation_url: "https://www.bath.ac.uk"
+portrait: "img/portrait.jpg"
 aliases: ["/about/"]
 ---
 My research examines women's employment across industrialised countries and how social policies

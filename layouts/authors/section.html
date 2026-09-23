@@ -1,0 +1,41 @@
+{{ define "main" }}
+{{- /* Author pages are sections with no child pages: they carry a name for
+       co-author credits, the bio, and the CV file. They get their own template
+       rather than conditionals in the shared listing one.
+
+       The portrait repeats the hero's move, anchored so its bottom edge meets
+       the rule closing this block, but centred rather than set beside type. */ -}}
+<section class="profile">
+  <div class="wrap">
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.role }}
+    <p class="profile-role">
+      {{ . }}
+      {{- with $.Params.affiliation }}, {{ with $.Params.affiliation_url -}}
+        <a href="{{ . }}"{{ partial "extlink.html" . | safeHTMLAttr }}>
+      {{- end }}{{ . }}{{ if $.Params.affiliation_url }}</a>{{ end }}{{ end }}
+    </p>
+    {{- end }}
+
+    {{- /* Page-specific only. Falling back to the site portrait would put
+           Helen's photo on a co-author's page. */ -}}
+    {{- with .Params.portrait }}
+    {{- with resources.Get . }}
+    {{- $p := .Process "resize 720x webp q82" }}
+    <figure class="profile-portrait">
+      <img src="{{ $p.RelPermalink }}" width="{{ $p.Width }}" height="{{ $p.Height }}"
+           alt="{{ $.Title }}" loading="lazy">
+    </figure>
+    {{- end }}
+    {{- end }}
+  </div>
+</section>
+
+{{- with .Content }}
+<section class="section profile-body">
+  <div class="wrap">
+    <div class="prose">{{ . }}</div>
+  </div>
+</section>
+{{- end }}
+{{ end }}

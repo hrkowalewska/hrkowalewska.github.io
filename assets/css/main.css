@@ -455,6 +455,33 @@ img { max-width: 100%; height: auto; display: block; }
   font-family: var(--font-mono); font-size: 0.6875rem; color: var(--ink-faint); letter-spacing: 0.03em;
 }
 
+/* --- author profile ------------------------------------------------------
+   Repeats the hero's anchored portrait, centred rather than beside type. The
+   bottom padding and the portrait's negative margin share one variable so the
+   photo always lands exactly on the rule.                                    */
+
+.profile {
+  --profile-pad-end: clamp(2.5rem, 6vw, 4rem);
+  padding-block: clamp(2.5rem, 6vw, 4rem) var(--profile-pad-end);
+  border-bottom: 1px solid var(--rule);
+  text-align: center;
+}
+.profile h1 { font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem); }
+.profile-role {
+  margin: 0.8rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+}
+.profile-portrait {
+  width: clamp(11rem, 30vw, 16rem);
+  margin: clamp(2rem, 5vw, 3rem) auto calc(-1 * var(--profile-pad-end));
+}
+.profile-portrait img { width: 100%; border-radius: var(--radius-img); display: block; }
+/* The header above is centred, so centre the measure under it rather than
+   leaving the prose hard against the left edge of a 74rem wrap. */
+.profile-body .prose { margin-inline: auto; }
+
 /* --- list pages ---------------------------------------------------------- */
 
 .page-head { padding-block: clamp(2.5rem, 6vw, 4rem) clamp(1.75rem, 4vw, 2.5rem); border-bottom: 1px solid var(--rule); }
