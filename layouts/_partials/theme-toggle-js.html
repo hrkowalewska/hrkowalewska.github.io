@@ -1,25 +1,54 @@
 <script>
-// Theme toggle. The system setting wins until the reader makes a choice; that
-// choice is stamped on the root element and remembered. head.html re-applies it
+// Three-state theme control: auto, light, dark.
+//
+// Auto is the absence of a choice, not a value. It stores nothing and removes
+// data-theme, so the stylesheet's prefers-color-scheme block governs and the
+// page follows the system live, with no listener needed here. Choosing light or
+// dark stamps the root element and remembers it; head.html re-applies that
 // before first paint so there is no flash.
+//
+// The label names the current setting rather than the next one, and the title
+// and aria-label spell it out. No aria-pressed: that is binary and this is not.
 (function () {
   var root = document.documentElement, btn = document.getElementById('theme-toggle');
   if (!btn) return;
-  function isDark() {
-    var t = root.getAttribute('data-theme');
-    return t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  var ORDER = ['auto', 'light', 'dark'];
+  var LABEL = { auto: 'Auto', light: 'Light', dark: 'Dark' };
+  var HINT = {
+    auto:  'Theme: follow system settings',
+    light: 'Theme: light mode',
+    dark:  'Theme: dark mode'
+  };
+
+  function stored() {
+    try {
+      var t = localStorage.getItem('theme');
+      return (t === 'light' || t === 'dark') ? t : 'auto';
+    } catch (e) { return 'auto'; }
   }
-  function sync() {
-    var dark = isDark();
-    btn.textContent = dark ? 'Light' : 'Dark';
-    btn.setAttribute('aria-pressed', String(dark));
+
+  var mode = stored();
+
+  function apply() {
+    if (mode === 'auto') root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', mode);
+
+    try {
+      if (mode === 'auto') localStorage.removeItem('theme');
+      else localStorage.setItem('theme', mode);
+    } catch (e) {}
+
+    btn.textContent = LABEL[mode];
+    btn.title = HINT[mode];
+    btn.setAttribute('aria-label', HINT[mode]);
   }
+
   btn.addEventListener('click', function () {
-    var next = isDark() ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('theme', next); } catch (e) {}
-    sync();
+    mode = ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length];
+    apply();
   });
-  sync();
+
+  apply();
 })();
 </script>

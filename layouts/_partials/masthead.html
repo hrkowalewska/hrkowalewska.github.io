@@ -14,6 +14,12 @@
       <a href="{{ $url }}"{{ if $current }} aria-current="page"{{ end }}>{{ .Name }}</a>
       {{- end }}
     </nav>
-    <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Dark</button>
+    {{- /* Three states, so aria-pressed is wrong: it is binary. The label names
+           the current setting and the tooltip spells it out. Auto is the
+           server-rendered default because it is what anyone without a stored
+           choice is already getting. */ -}}
+    <button class="theme-toggle" id="theme-toggle" type="button"
+            title="Theme: follow system settings"
+            aria-label="Theme: follow system settings">Auto</button>
   </div>
 </header>

@@ -62,6 +62,6 @@
 {{- /* Set the theme before first paint so a dark-mode reader never sees a
        white flash. Kept inline and tiny for exactly that reason. */}}
 <script>
-(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 </head>

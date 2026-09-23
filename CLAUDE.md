@@ -117,6 +117,13 @@ section flips with `.accent-alt`. Adding a section is one class, not a set of ov
 Minification and fingerprinting are gated on `hugo.IsServer`, not `hugo.IsProduction`, so only the
 dev server skips them and a staging build is otherwise byte-identical to production.
 
+**The theme control has three states**, auto, light and dark, cycled in that order. Auto is the
+absence of a choice rather than a value: it removes `data-theme` and clears the stored key, so the
+`prefers-color-scheme` block governs and the page tracks the system live without a listener. The
+label names the current setting and `title`/`aria-label` spell it out; there is no `aria-pressed`,
+which is binary. The pre-paint guard in `head.html` only honours a stored `light` or `dark`, so a
+stale or junk value falls back to auto rather than stamping an attribute that matches no rule.
+
 **External links open in a new tab.** `_partials/extlink.html` emits the attributes when a URL's host
 differs from `site.BaseURL`; it is called from the link render hook, the entry partial, the single
 page template and the footer. Its output must be piped through `safeHTMLAttr`, or Go's contextual

@@ -192,6 +192,9 @@ img { max-width: 100%; height: auto; display: block; }
   letter-spacing: 0.08em; text-transform: uppercase;
   background: none; border: 1px solid var(--rule); color: var(--ink-soft);
   padding: 0.3rem 0.55rem; cursor: pointer; border-radius: var(--radius-ctl);
+  /* Auto, Light and Dark are different widths; reserve the widest so the nav
+     beside it does not shift each time the label changes. */
+  min-width: 4.25rem; text-align: center;
 }
 .theme-toggle:hover { border-color: var(--rule-strong); color: var(--ink); }
 
