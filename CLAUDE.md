@@ -106,9 +106,13 @@ step beyond Hugo itself. Colours are `oklch` custom properties with light and da
 `:root`, a `prefers-color-scheme` block and an explicit `[data-theme]` block so the toggle wins in
 both directions.
 
-Two colours carry meaning: `--series-a` (teal) marks scholarly output and `--series-b` (ochre) marks
-public engagement. They are deliberately **not** pink and blue — the research is about gender, and
-reproducing that convention would undercut it.
+Two accents, `--accent-1` (teal) and `--accent-2` (ochre), alternate section by section purely for
+rhythm. They carry no meaning. An earlier version tried to make teal mean "scholarly" and ochre mean
+"public engagement", but with five homepage sections of which three are neither, it only ever read as
+a stray colour.
+
+Components never name an accent. They read `var(--accent)`, which `:root` sets to the first and a
+section flips with `.accent-alt`. Adding a section is one class, not a set of override rules.
 
 Minification and fingerprinting are gated on `hugo.IsServer`, not `hugo.IsProduction`, so only the
 dev server skips them and a staging build is otherwise byte-identical to production.

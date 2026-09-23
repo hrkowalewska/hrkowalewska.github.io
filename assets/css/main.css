@@ -1,16 +1,19 @@
 /* ==========================================================================
-   helenkowalewska.uk — "two series"
-   Design language mockup. Hand-written CSS, no framework, no build step.
+   helenkowalewska.uk
+   Hand-written CSS. No framework, no preprocessor, no build step beyond Hugo.
 
-   Two structural devices, both encoding something true about the content:
-     - the year rail, because the work is a typed chronology
-     - the two-series accent, because the career splits into scholarly output
-       (12 publications) and public engagement (37 media items)
+   The year rail is the one structural device that encodes something true: the
+   work is a typed chronology.
 
-   Series colours are teal and ochre. Explicitly NOT pink and blue: the
-   research is about gender, so reproducing that convention would undercut it.
-   Teal/ochre also tested strongest of four candidate pairs for colour-vision
-   separation (42.0 protan, 44.6 deutan, 58.8 tritan).
+   The two accents are decoration, not meaning. They alternate section by
+   section so the page has a rhythm; an earlier version tried to make teal mean
+   "scholarly" and ochre mean "public engagement", but with five homepage
+   sections of which three are neither, it only ever read as a stray colour.
+
+   Teal and ochre, explicitly NOT pink and blue: the research is about gender,
+   so reproducing that convention would undercut it. The pair also tested
+   strongest of four candidates for colour-vision separation (42.0 protan,
+   44.6 deutan, 58.8 tritan).
    ========================================================================== */
 
 @font-face {
@@ -46,11 +49,12 @@
   --rule:       oklch(0.885 0.008 260);
   --rule-strong:oklch(0.78  0.012 260);
 
-  /* Series A: scholarship. Series B: public engagement. */
-  --series-a:     oklch(0.47 0.09 195);
-  --series-a-dim: oklch(0.47 0.09 195 / 0.14);
-  --series-b:     oklch(0.52 0.12 75);
-  --series-b-dim: oklch(0.52 0.12 75 / 0.14);
+  /* The two accents, and the one components actually read. A section flips
+     `--accent` with .accent-alt; nothing below needs to know which it got. */
+  --accent-1:     oklch(0.47 0.09 195);
+  --accent-1-dim: oklch(0.47 0.09 195 / 0.14);
+  --accent-2:     oklch(0.52 0.12 75);
+  --accent-2-dim: oklch(0.52 0.12 75 / 0.14);
 
   --focus: oklch(0.55 0.19 265);
 
@@ -80,10 +84,10 @@
     --ink-faint:  oklch(0.605 0.016 265);
     --rule:       oklch(0.315 0.018 265);
     --rule-strong:oklch(0.42  0.02  265);
-    --series-a:     oklch(0.76 0.09 195);
-    --series-a-dim: oklch(0.76 0.09 195 / 0.18);
-    --series-b:     oklch(0.80 0.11 80);
-    --series-b-dim: oklch(0.80 0.11 80 / 0.18);
+    --accent-1:     oklch(0.76 0.09 195);
+    --accent-1-dim: oklch(0.76 0.09 195 / 0.18);
+    --accent-2:     oklch(0.80 0.11 80);
+    --accent-2-dim: oklch(0.80 0.11 80 / 0.18);
     --focus: oklch(0.76 0.15 265);
   }
 }
@@ -96,13 +100,17 @@
   --ink-faint:  oklch(0.605 0.016 265);
   --rule:       oklch(0.315 0.018 265);
   --rule-strong:oklch(0.42  0.02  265);
-  --series-a:     oklch(0.76 0.09 195);
-  --series-a-dim: oklch(0.76 0.09 195 / 0.18);
-  --series-b:     oklch(0.80 0.11 80);
-  --series-b-dim: oklch(0.80 0.11 80 / 0.18);
+  --accent-1:     oklch(0.76 0.09 195);
+  --accent-1-dim: oklch(0.76 0.09 195 / 0.18);
+  --accent-2:     oklch(0.80 0.11 80);
+  --accent-2-dim: oklch(0.80 0.11 80 / 0.18);
   --focus: oklch(0.76 0.15 265);
 }
 
+
+/* Accent rotation. Sections alternate down the page purely for rhythm. */
+:root { --accent: var(--accent-1); --accent-hair: var(--accent-1-dim); }
+.accent-alt { --accent: var(--accent-2); --accent-hair: var(--accent-2-dim); }
 
 /* --- base ---------------------------------------------------------------- */
 
@@ -229,11 +237,13 @@ img { max-width: 100%; height: auto; display: block; }
   text-wrap: balance;
 }
 .hero-statement > span.is-current { opacity: 1; transform: none; }
+/* Alternates with the sections below, same rhythm. */
+.hero-statement > span:nth-child(even) em { color: var(--accent-2); }
 /* Leaving to the left. The script clears this once the slide finishes, so the
    span returns to the right-hand waiting position. */
 .hero-statement > span.is-leaving { opacity: 0; transform: translateX(-1.5em); }
 /* The one moment of colour in the hero: the comparative claim itself. */
-.hero-statement em { font-style: normal; color: var(--series-a); }
+.hero-statement em { font-style: normal; color: var(--accent); }
 .hero-meta {
   margin: 2rem 0 0;
   display: flex; flex-direction: column; gap: 0.3rem;
@@ -270,9 +280,8 @@ img { max-width: 100%; height: auto; display: block; }
 .section-head h2 { font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.75rem); position: relative; padding-top: 0.85rem; }
 .section-head h2::before {
   content: ""; position: absolute; top: 0; left: 0;
-  width: 2.5rem; height: 3px; background: var(--series-a);
+  width: 2.5rem; height: 3px; background: var(--accent);
 }
-.series-b .section-head h2::before { background: var(--series-b); }
 .section-head .label { white-space: nowrap; }
 .section-head a.more { font-family: var(--font-display); font-size: 0.875rem; font-weight: 500; color: var(--ink-soft); }
 .section-head a.more:hover { color: var(--ink); }
@@ -293,9 +302,8 @@ img { max-width: 100%; height: auto; display: block; }
   font-family: var(--font-mono);
   font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem);
   font-variant-numeric: tabular-nums;
-  line-height: 1; color: var(--series-a); letter-spacing: -0.02em;
+  line-height: 1; color: var(--accent); letter-spacing: -0.02em;
 }
-.series-b .entry-year { color: var(--series-b); }
 .entry-kind {
   display: block; margin-top: 0.5rem;
   font-family: var(--font-mono); font-size: 0.625rem;
@@ -311,8 +319,7 @@ img { max-width: 100%; height: auto; display: block; }
   margin: 0; text-wrap: pretty;
 }
 .entry-title a { text-decoration: none; }
-.entry-title a:hover { text-decoration: underline; text-decoration-color: var(--series-a); }
-.series-b .entry-title a:hover { text-decoration-color: var(--series-b); }
+.entry-title a:hover { text-decoration: underline; text-decoration-color: var(--accent); }
 
 .entry-venue { margin: 0.4rem 0 0; font-size: 0.95rem; color: var(--ink-soft); }
 .entry-venue cite { font-style: italic; }
@@ -325,8 +332,7 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--ink-soft); border: 1px solid var(--rule);
   padding: 0.22rem 0.5rem; border-radius: var(--radius-ctl); white-space: nowrap;
 }
-.chip:hover { border-color: var(--series-a); color: var(--series-a); }
-.series-b .chip:hover { border-color: var(--series-b); color: var(--series-b); }
+.chip:hover { border-color: var(--accent); color: var(--accent); }
 
 /* Abstracts live in front matter and the single pages have empty bodies, so
    they expand in place rather than sending the reader to a near-blank page. */
@@ -338,16 +344,14 @@ img { max-width: 100%; height: auto; display: block; }
   display: inline-flex; align-items: center; gap: 0.4rem; padding-block: 0.15rem;
 }
 .entry summary::-webkit-details-marker { display: none; }
-.entry summary::before { content: "+"; font-size: 0.85rem; line-height: 1; color: var(--series-a); }
-.series-b .entry summary::before { color: var(--series-b); }
+.entry summary::before { content: "+"; font-size: 0.85rem; line-height: 1; color: var(--accent); }
 .entry details[open] summary::before { content: "\2212"; }
 .entry summary:hover { color: var(--ink); }
 .entry details > p {
   margin: 0.65rem 0 0; max-width: var(--measure);
   font-size: 0.975rem; color: var(--ink-soft);
-  border-left: 2px solid var(--series-a-dim); padding-left: 1rem;
+  border-left: 2px solid var(--accent-hair); padding-left: 1rem;
 }
-.series-b .entry details > p { border-left-color: var(--series-b-dim); }
 
 /* --- project cards ------------------------------------------------------- */
 
@@ -359,7 +363,7 @@ img { max-width: 100%; height: auto; display: block; }
 .project { background: var(--paper); padding: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
 .project h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
 .project p { margin: 0; font-size: 0.95rem; color: var(--ink-soft); }
-.project .label { color: var(--series-a); }
+.project .label { color: var(--accent); }
 
 /* --- two-column stacks (teaching, grants) -------------------------------- */
 
@@ -400,12 +404,12 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .prose > :first-child { margin-top: 0; }
 .prose p:last-child { margin-bottom: 0; }
-.prose a { color: var(--series-a); text-decoration-color: var(--series-a-dim); }
-.prose a:hover { text-decoration-color: var(--series-a); }
+.prose a { color: var(--accent); text-decoration-color: var(--accent-hair); }
+.prose a:hover { text-decoration-color: var(--accent); }
 
 /* --- call to action ------------------------------------------------------
    The take-part page's only button. Square, like everything else, and it
-   borrows the series-a accent rather than introducing a third colour.        */
+   borrows the section accent rather than introducing a third colour.         */
 
 .cta { margin: 1.75rem 0; }
 .cta a {
@@ -415,7 +419,7 @@ img { max-width: 100%; height: auto; display: block; }
   font-weight: 600;
   text-decoration: none;
   color: var(--paper);
-  background: var(--series-a);
+  background: var(--accent);
   padding: 0.8rem 1.4rem;
   border-radius: var(--radius-ctl);
 }
@@ -472,7 +476,7 @@ img { max-width: 100%; height: auto; display: block; }
 .page-venue cite { font-style: italic; }
 .page-abstract { margin-top: 1.75rem; }
 .page-abstract p {
-  border-left: 2px solid var(--series-a-dim);
+  border-left: 2px solid var(--accent-hair);
   padding-left: 1.25rem;
   color: var(--ink-soft);
 }
