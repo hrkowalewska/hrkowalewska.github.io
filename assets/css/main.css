@@ -395,7 +395,18 @@ img { max-width: 100%; height: auto; display: block; }
   padding-block: clamp(2.5rem, 5vw, 3.5rem); margin-top: clamp(2.5rem, 6vw, 4.5rem);
 }
 .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 2rem; align-items: start; }
-.footer-grid h3 { font-size: 0.95rem; margin-bottom: 0.65rem; }
+/* Column headings. These name a group rather than titling a section, so they
+   take the same mono label treatment as .label and .year-heading instead of
+   being display headings. The element is an h2 for the document outline. */
+.footer-grid h2 {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 1.1rem;
+}
 .footer-links { display: flex; flex-direction: column; gap: 0.35rem; }
 .footer-links a { font-size: 0.925rem; color: var(--ink-soft); text-decoration: none; width: fit-content; }
 .footer-links a:hover { color: var(--ink); text-decoration: underline; }
