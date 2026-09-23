@@ -42,11 +42,18 @@
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $desc | plainify | truncate 180 }}">
 <meta property="og:url" content="{{ .Permalink }}">
+{{- /* A square share image, not the 1.91:1 large-card size. The only photo we
+       have is a 4:5 portrait, and cropping that to a wide card can only produce
+       an extreme close-up. A square headshot with the smaller card type reads
+       properly everywhere instead. */ -}}
 {{- with site.Params.portrait }}{{ with resources.Get . }}
-{{- $og := .Process "resize 1200x630 webp q85 smart" }}
+{{- $og := .Process "fill 1200x1200 webp q85 smart" }}
 <meta property="og:image" content="{{ $og.Permalink }}">
+<meta property="og:image:width" content="{{ $og.Width }}">
+<meta property="og:image:height" content="{{ $og.Height }}">
+<meta property="og:image:alt" content="Helen Kowalewska">
 {{- end }}{{ end }}
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 
 {{ with .OutputFormats.Get "rss" -}}
 <link rel="alternate" type="application/rss+xml" href="{{ .Permalink }}" title="{{ site.Title }}">

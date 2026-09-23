@@ -119,7 +119,7 @@
     <div class="section-head"><h2>About</h2></div>
     <div class="about-grid">
       {{- with resources.Get site.Params.portrait }}
-      {{- $sq := .Process "resize 720x720 webp q82 smart" }}
+      {{- $sq := .Process "fill 720x720 webp q82 smart" }}
       <figure class="about-portrait">
         <img src="{{ $sq.RelPermalink }}" width="{{ $sq.Width }}" height="{{ $sq.Height }}" alt="" loading="lazy">
       </figure>
