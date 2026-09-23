@@ -2,7 +2,7 @@ name: helenkowalewska.uk
 
 services:
   server:
-    # Official image from the Hugo project, extended build (the theme needs SCSS).
+    # Official image from the Hugo project. Only the extended build is published.
     # Kept in step with the version in .github/workflows/deploy.yml.
     image: ghcr.io/gohugoio/hugo:v0.166.0
     # The image entrypoint is Hugo itself, so this starts at the subcommand.

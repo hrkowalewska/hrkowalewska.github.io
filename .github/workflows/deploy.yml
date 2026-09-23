@@ -20,15 +20,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # `public` is no longer a submodule, and nothing else in the tree is one.
-      # The Academic theme is vendored under themes/academic.
       - uses: actions/checkout@v4
         with:
           submodules: false
 
-      # Pinned to the same image as docker-compose.yml. The theme needs the
-      # extended build for its SCSS. Run as the runner's own user so the
-      # generated `public` is writable, and keep the cache off the image's
-      # root-owned /cache for the same reason.
+      # Pinned to the same image as docker-compose.yml so CI and local builds
+      # match. Run as the runner's own user so the generated `public` is
+      # writable, and keep the cache off the image's root-owned /cache for the
+      # same reason.
       - name: Build
         run: |
           docker run --rm \
