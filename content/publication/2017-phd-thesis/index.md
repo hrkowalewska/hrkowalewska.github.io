@@ -5,5 +5,27 @@ authors: [helen]
 pubtype: thesis
 venue: "University of Southampton"
 link: "https://eprints.soton.ac.uk/417383/1/Helen_Kowalewska_Minor_Corrections.pdf"
-abstract: "Since the late-1990s, advanced economies have converged on an ‘active’ social policy agenda aimed at maximising employment. Consequently, women are no longer treated as caregivers. Rather, they are required and assumed to be in employment. Although gender has moved from margins to the mainstream of comparative welfare state research in recent years, the agenda of ‘gendering’ the analysis of welfare states under activation remains incomplete. This three-paper thesis contributes to completing this agenda. Papers 1 and 2 assess activation strategies towards lone mothers who, as sole breadwinners and caregivers within their households, are a ‘litmus test’ of gendered social rights. Focusing on the UK, Paper 1 shows that, against the commonplace characterisation of the UK as a pioneer of ‘making work pay’, changes to the UK’s tax-benefit system since 2010 have weakened lone mothers’ financial incentives to work beyond a few hours a week. Paper 2 subsequently builds on Paper 1 in dimensional and geographical scope by examining how active labour market and family policies across 22 welfare states help or hinder lone mothers’ employment. It shows that cross-national variations in support for maternal activation are not well captured by the commonplace dichotomy within the mainstream literature between a Nordic-style ‘train-first’ approach to activation and an Anglo-Saxon ‘work-first’ approach. Paper 3 then extends Papers 1 and 2 in conceptual terms. It argues that analysing women’s social risks under activation requires looking not just at active labour market and family policies. Also important are gender boardroom quotas and other regulatory policies that set numerical targets for women in top corporate board and executive positions. This is because a ‘critical mass’ (23-40 per cent) of women in top management can generate important ‘trickle-down’ benefits, which can help to alleviate some of the ‘new’ social risks (e.g. work/care conflicts, in-work poverty) faced by women at the bottom of the labour market under activation."
+abstract: |-
+  Since the late-1990s, advanced economies have converged on an ‘active’ social policy agenda
+  aimed at maximising employment. Consequently, women are no longer treated as caregivers. Rather,
+  they are required and assumed to be in employment. Although gender has moved from margins to the
+  mainstream of comparative welfare state research in recent years, the agenda of ‘gendering’ the
+  analysis of welfare states under activation remains incomplete. This three-paper thesis
+  contributes to completing this agenda. Papers 1 and 2 assess activation strategies towards lone
+  mothers who, as sole breadwinners and caregivers within their households, are a ‘litmus test’ of
+  gendered social rights. Focusing on the UK, Paper 1 shows that, against the commonplace
+  characterisation of the UK as a pioneer of ‘making work pay’, changes to the UK’s tax-benefit
+  system since 2010 have weakened lone mothers’ financial incentives to work beyond a few hours a
+  week. Paper 2 subsequently builds on Paper 1 in dimensional and geographical scope by examining
+  how active labour market and family policies across 22 welfare states help or hinder lone
+  mothers’ employment. It shows that cross-national variations in support for maternal activation
+  are not well captured by the commonplace dichotomy within the mainstream literature between a
+  Nordic-style ‘train-first’ approach to activation and an Anglo-Saxon ‘work-first’ approach.
+  Paper 3 then extends Papers 1 and 2 in conceptual terms. It argues that analysing women’s social
+  risks under activation requires looking not just at active labour market and family policies.
+  Also important are gender boardroom quotas and other regulatory policies that set numerical
+  targets for women in top corporate board and executive positions. This is because a ‘critical
+  mass’ (23-40 per cent) of women in top management can generate important ‘trickle-down’
+  benefits, which can help to alleviate some of the ‘new’ social risks (e.g. work/care conflicts,
+  in-work poverty) faced by women at the bottom of the labour market under activation.
 ---

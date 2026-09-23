@@ -350,11 +350,16 @@ img { max-width: 100%; height: auto; display: block; }
 .entry summary::before { content: "+"; font-size: 0.85rem; line-height: 1; color: var(--accent); }
 .entry details[open] summary::before { content: "\2212"; }
 .entry summary:hover { color: var(--ink); }
-.entry details > p {
+.entry details .abstract {
   margin: 0.65rem 0 0; max-width: var(--measure);
   font-size: 0.975rem; color: var(--ink-soft);
   border-left: 2px solid var(--accent-hair); padding-left: 1rem;
+  /* These run to 2,000 characters, so they get a little more air than body
+     copy to keep a long block scannable. */
+  line-height: 1.7;
 }
+.entry details .abstract p { margin: 0 0 0.9rem; }
+.entry details .abstract p:last-child { margin-bottom: 0; }
 
 /* --- project cards ------------------------------------------------------- */
 

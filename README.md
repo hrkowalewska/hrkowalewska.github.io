@@ -34,7 +34,10 @@ pubtype: article
 venue: "Journal of European Social Policy"
 doi: "10.1177/09589287221148336"
 link: "https://journals.sagepub.com/doi/10.1177/09589287221148336"
-abstract: "A comparative account of how women's labour market outcomes cluster…"
+abstract: |-
+  A comparative account of how women's labour market outcomes cluster…
+
+  Leave a blank line to start a new paragraph.
 ---
 ```
 

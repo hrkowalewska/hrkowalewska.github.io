@@ -22,7 +22,7 @@
     {{- end }}
 
     {{- with .Params.abstract }}
-    <div class="prose page-abstract"><p>{{ . }}</p></div>
+    <div class="prose page-abstract">{{ . | markdownify }}</div>
     {{- end }}
     {{- with .Content }}
     <div class="prose">{{ . }}</div>

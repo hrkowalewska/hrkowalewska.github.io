@@ -96,7 +96,9 @@
     {{- with .Params.abstract }}
     <details>
       <summary>Abstract</summary>
-      <p>{{ . }}</p>
+      {{- /* Rendered as Markdown so a blank line in the front matter becomes a
+             real paragraph. A hardcoded <p> could not, whatever was written. */}}
+      <div class="abstract">{{ . | markdownify }}</div>
     </details>
     {{- end }}
   </div>

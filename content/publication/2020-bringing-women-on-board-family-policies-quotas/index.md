@@ -6,5 +6,17 @@ pubtype: article
 venue: "Work, Employment and Society"
 doi: "10.1177/0950017020971221"
 link: "https://journals.sagepub.com/doi/full/10.1177/0950017020971221"
-abstract: "An influential body of work has identified a ‘welfare-state paradox’: work–family policies that bring women into the workforce also undermine women’s access to the top jobs. Missing from this literature is a consideration of how welfare-state interventions impact on women’s representation at the board-level specifically, rather than managerial and lucrative positions more generally. This article contributes to addressing this ‘gap’. A fuzzy-set Qualitative Comparative Analysis of 22 industrialised countries reveals how welfare-state interventions combine with gender boardroom quotas and targets in (not) bringing a ‘critical mass’ of women onto private-sector corporate boards. Overall, the analysis finds limited evidence in support of a welfare-state paradox; in fact, countries are unlikely to achieve a critical mass of women on boards in the absence of adequate childcare services. The results further suggest that ‘hard’, mandatory gender boardroom quotas are not necessary for achieving more women on boards; ‘soft’, voluntary recommendations can also work under certain family policy constellations."
+abstract: |-
+  An influential body of work has identified a ‘welfare-state paradox’: work–family policies that
+  bring women into the workforce also undermine women’s access to the top jobs. Missing from this
+  literature is a consideration of how welfare-state interventions impact on women’s
+  representation at the board-level specifically, rather than managerial and lucrative positions
+  more generally. This article contributes to addressing this ‘gap’. A fuzzy-set Qualitative
+  Comparative Analysis of 22 industrialised countries reveals how welfare-state interventions
+  combine with gender boardroom quotas and targets in (not) bringing a ‘critical mass’ of women
+  onto private-sector corporate boards. Overall, the analysis finds limited evidence in support of
+  a welfare-state paradox; in fact, countries are unlikely to achieve a critical mass of women on
+  boards in the absence of adequate childcare services. The results further suggest that ‘hard’,
+  mandatory gender boardroom quotas are not necessary for achieving more women on boards; ‘soft’,
+  voluntary recommendations can also work under certain family policy constellations.
 ---
