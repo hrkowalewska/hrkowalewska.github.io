@@ -1,4 +1,4 @@
 ---
-title: "Teaching & recognition"
+title: "Teaching"
 ---
-Units convened and taught, and the grants, prizes and nominations that have supported the work.
+Units convened and taught, at Bath and previously at Southampton.

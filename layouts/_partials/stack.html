@@ -1,0 +1,22 @@
+{{- /*
+  A dated list: year on the left, entry on the right. Used by the teaching and
+  awards sections on the homepage and by their full pages.
+
+  Takes an already-sliced list, so the caller decides how many to show:
+
+      {{ partial "stack.html" (first 4 hugo.Data.teaching) }}
+      {{ partial "stack.html" hugo.Data.grants }}
+
+  `note` is Markdown, which is how the unit handbook link works.
+*/ -}}
+<div class="stack">
+  {{- range . }}
+  <div class="stack-item">
+    <span class="stack-when">{{ substr .date 0 4 }}</span>
+    <div>
+      <p class="stack-what">{{ .title }}</p>
+      <p class="stack-where">{{ .org }}{{ with .note }} &middot; {{ . | markdownify }}{{ end }}</p>
+    </div>
+  </div>
+  {{- end }}
+</div>

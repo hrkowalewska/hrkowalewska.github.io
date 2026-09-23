@@ -89,43 +89,24 @@
 <section class="section accent-alt" id="teaching">
   <div class="wrap">
     <div class="section-head">
-      <h2>Teaching &amp; recognition</h2>
-      <a class="more" href="{{ "/teaching/" | relURL }}">All teaching and awards &rarr;</a>
+      <h2>Teaching</h2>
+      <a class="more" href="{{ "/teaching/" | relURL }}">All {{ len hugo.Data.teaching }} units &rarr;</a>
     </div>
-    <div class="cols">
-      <div>
-        <h3 class="label">Teaching</h3>
-        <div class="stack">
-          {{- range first 4 hugo.Data.teaching }}
-          <div class="stack-item">
-            <span class="stack-when">{{ substr .date 0 4 }}</span>
-            <div>
-              <p class="stack-what">{{ .title }}</p>
-              <p class="stack-where">{{ .org }}{{ with .note }} &middot; {{ . | markdownify }}{{ end }}</p>
-            </div>
-          </div>
-          {{- end }}
-        </div>
-      </div>
-      <div>
-        <h3 class="label">Grants &amp; prizes</h3>
-        <div class="stack">
-          {{- range first 4 hugo.Data.grants }}
-          <div class="stack-item">
-            <span class="stack-when">{{ substr .date 0 4 }}</span>
-            <div>
-              <p class="stack-what">{{ .title }}</p>
-              <p class="stack-where">{{ .org }}</p>
-            </div>
-          </div>
-          {{- end }}
-        </div>
-      </div>
-    </div>
+    {{ partial "stack.html" (first 4 hugo.Data.teaching) }}
   </div>
 </section>
 
-<section class="section" id="about">
+<section class="section" id="awards">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Grants and awards</h2>
+      <a class="more" href="{{ "/awards/" | relURL }}">All {{ len hugo.Data.grants }} entries &rarr;</a>
+    </div>
+    {{ partial "stack.html" (first 4 hugo.Data.grants) }}
+  </div>
+</section>
+
+<section class="section accent-alt" id="about">
   <div class="wrap">
     <div class="section-head">
       <h2>About</h2>

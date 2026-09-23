@@ -29,6 +29,13 @@
   url = "/teaching/"
   weight = 50
 
+# Shorter than the page's own title, "Grants and awards", to keep the bar from
+# getting unwieldy. Hugo lets the two differ.
+[[main]]
+  name = "Awards"
+  url = "/awards/"
+  weight = 55
+
 [[main]]
   name = "About"
   url = "/authors/helen/"

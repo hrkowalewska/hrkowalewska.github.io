@@ -376,7 +376,9 @@ img { max-width: 100%; height: auto; display: block; }
 /* --- two-column stacks (teaching, grants) -------------------------------- */
 
 .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: clamp(2rem, 5vw, 4rem); }
-.stack { display: flex; flex-direction: column; }
+/* Entries are short, so without a cap the rows would stretch the full 74rem
+   and leave the year stranded miles from its title. */
+.stack { display: flex; flex-direction: column; max-width: 46rem; }
 .stack-item {
   padding-block: 0.9rem; border-bottom: 1px solid var(--rule);
   display: grid; grid-template-columns: 4.25rem 1fr; gap: 0 1rem;

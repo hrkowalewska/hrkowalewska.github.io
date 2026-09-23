@@ -1,0 +1,18 @@
+{{ define "main" }}
+{{- /* Mirrors layouts/teaching/section.html. The list lives in
+       data/grants.yaml and mixes funding with honours, which is why the
+       heading covers both rather than naming one. */ -}}
+<section class="page-head">
+  <div class="wrap">
+    <p class="label">{{ len hugo.Data.grants }} entries</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    {{ partial "stack.html" hugo.Data.grants }}
+  </div>
+</section>
+{{ end }}

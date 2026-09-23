@@ -88,9 +88,13 @@ chosen to dodge Hugo reserved keys and must not be renamed back: **`link`** (not
 overrides the page URL), **`pubtype`** (not `type`, which drives layout lookup) and **`medium`** (not
 `kind`, removed as a front-matter key in Hugo 0.144).
 
-**Hand-maintained lists live in `data/`**, not in content. `grants.yaml` and `teaching.yaml` are read
-by `home.html` and `teaching/section.html`; `statements.yaml` holds the hero questions. Adding a
-grant means adding three lines of YAML.
+**Hand-maintained lists live in `data/`**, not in content. `teaching.yaml` and `grants.yaml` each
+feed their own homepage section and their own page, `/teaching/` and `/awards/`; `statements.yaml`
+holds the hero questions. Adding a grant means adding three lines of YAML.
+
+`grants.yaml` mixes funding with honours, which is why its heading is "Grants and awards" rather than
+naming one or the other. `_partials/stack.html` renders a dated list and is shared by all four
+places these appear, so the caller slices the data and the partial does the markup.
 
 **The hero rotates.** Every question in `data/statements.yaml` renders into the `h1`, stacked in one
 grid cell so the hero reserves the height of the tallest and the rotation cannot move the bottom rule
