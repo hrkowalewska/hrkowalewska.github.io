@@ -146,13 +146,18 @@ step beyond Hugo itself. Colours are `oklch` custom properties with light and da
 `:root`, a `prefers-color-scheme` block and an explicit `[data-theme]` block so the toggle wins in
 both directions.
 
-Two accents, `--accent-1` (teal) and `--accent-2` (ochre), alternate section by section purely for
-rhythm. They carry no meaning. An earlier version tried to make teal mean "scholarly" and ochre mean
-"public engagement", but with five homepage sections of which three are neither, it only ever read as
-a stray colour.
+Two accents, `--accent-1` (teal) and `--accent-2` (ochre), carry no meaning. An earlier version
+tried to make teal mean "scholarly" and ochre mean "public engagement", but with five homepage
+sections of which three are neither, it only ever read as a stray colour.
 
-Components never name an accent. They read `var(--accent)`, which `:root` sets to the first and a
-section flips with `.accent-alt`. Adding a section is one class, not a set of override rules.
+A section keeps one accent everywhere it appears. `_partials/accent.html` holds the list,
+`home.html` reads it for each block and `baseof.html` puts the class on `<main>`, so a whole page
+inherits its section's accent and single pages come along for free. The homepage still alternates, because its
+running order and that list are arranged to. They used to disagree, which is why clicking an ochre
+block landed on a teal page. Reorder the homepage and the list has to follow.
+
+Components never name an accent. They read `var(--accent)`, which `:root` sets to the first and
+`.accent-alt` flips. Adding a section is one entry in that list, not a set of override rules.
 
 Minification and fingerprinting are gated on `hugo.IsServer`, not `hugo.IsProduction`, so only the
 dev server skips them and a staging build is otherwise byte-identical to production.

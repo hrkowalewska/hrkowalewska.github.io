@@ -5,10 +5,13 @@
    The year rail is the one structural device that encodes something true: the
    work is a typed chronology.
 
-   The two accents are decoration, not meaning. They alternate section by
-   section so the page has a rhythm; an earlier version tried to make teal mean
-   "scholarly" and ochre mean "public engagement", but with five homepage
-   sections of which three are neither, it only ever read as a stray colour.
+   The two accents are decoration, not meaning. A section keeps the same one
+   everywhere it appears, and the homepage runs its sections in an order that
+   alternates, so the page has a rhythm and a click-through never changes
+   colour. Which section gets which lives in _partials/accent.html, not here.
+   An earlier version tried to make teal mean "scholarly" and ochre mean
+   "public engagement", but with five homepage sections of which three are
+   neither, it only ever read as a stray colour.
 
    Teal and ochre, explicitly NOT pink and blue: the research is about gender,
    so reproducing that convention would undercut it. The pair also tested
@@ -49,8 +52,9 @@
   --rule:       oklch(0.885 0.008 260);
   --rule-strong:oklch(0.78  0.012 260);
 
-  /* The two accents, and the one components actually read. A section flips
-     `--accent` with .accent-alt; nothing below needs to know which it got. */
+  /* The two accents, and the one components actually read. .accent-alt flips
+     `--accent`, and baseof.html puts it on <main> so a whole page inherits its
+     section's accent. Nothing below needs to know which it got. */
   --accent-1:     oklch(0.47 0.09 195);
   --accent-1-dim: oklch(0.47 0.09 195 / 0.14);
   --accent-2:     oklch(0.52 0.12 75);
