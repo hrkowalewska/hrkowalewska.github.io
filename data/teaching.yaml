@@ -7,7 +7,9 @@
 # is only as wide as a four-digit year.
 #
 # `note` may contain Markdown and renders as its own paragraph. A `link` with a
-# `link_label` renders as a chip, which is where the unit handbook lives.
+# `link_label` renders as a chip, which is where the unit handbook lives. A
+# `page` would make the title itself click through, and nothing here has a page
+# to click through to yet.
 - title: "Sociology of the Family and Family Policy"
   kind: "Unit convenor"
   org: "University of Bath"

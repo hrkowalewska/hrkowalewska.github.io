@@ -23,6 +23,11 @@
     note   Markdown, its own paragraph under the org. This is how the grant
            descriptions stay readable at 300-odd characters.
     link   with `link_label`, rendered as a chip.
+    page   where the title links to, which is nowhere unless it is set. Not to
+           be confused with `link`: that is a chip out to somewhere else, this
+           is the row's own click-through. A content row gets the same thing
+           from `show_page`, and both default to a flat title for the same
+           reason, which is that most of these pages have nothing on them.
 */ -}}
 <div class="ledger">
   {{- range $e := . }}
@@ -44,7 +49,7 @@
       {{- end }}
     </div>
     <div class="entry-body">
-      <p class="entry-title">{{ .title }}</p>
+      <p class="entry-title">{{ with .page }}<a href="{{ . | relURL }}">{{ $e.title }}</a>{{ else }}{{ $e.title }}{{ end }}</p>
       <p class="entry-venue">{{ .org }}</p>
       {{- with .note }}
       <p class="entry-venue">{{ . | markdownify }}</p>

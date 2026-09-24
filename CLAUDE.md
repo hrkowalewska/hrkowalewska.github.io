@@ -83,6 +83,21 @@ list on the site shares one set of CSS rules. The teaching, awards and experienc
 quieter treatment of their own for a while and it drifted. The fix was to delete it rather than
 keep the two in step.
 
+**A row's title only links when there is something to see.** Every publication, media and talk page
+has an empty body, so the single page shows less than the row you clicked from. Those three sections
+are flat unless an item sets `show_page: true`, which `_partials/showpage.html` decides. Every other
+section links as before, and that is a section rule rather than "does the page have a body" because
+two project pages are empty too and their chip is the only route to the project site.
+
+A data row has no page of its own, so it names one instead. An optional `page` in `teaching.yaml`,
+`grants.yaml` or `experience.yaml` is where the title goes, which is nowhere unless it is set. Do
+not confuse it with `link`, which is a chip out to somewhere else.
+
+`showpage.html` also drives `noindex` in `head.html` and the filter in `layouts/sitemap.xml`, so an
+unlinked page is not advertised to search engines either. Setting `show_page` puts an item back in
+the listing and the sitemap together. That is the whole reason the rule lives in a partial. The
+sitemap template is Hugo's default plus that one condition.
+
 **Content sections** are `publication`, `media`, `talk`, `project`, `take-part`, `authors` and
 `post` (retired, see below). Each page is a page bundle at `content/<section>/<slug>/index.md`, and
 each section has an `_index.md` supplying the list page title and intro. `content/teaching/` holds
@@ -93,8 +108,11 @@ chosen to dodge Hugo reserved keys and must not be renamed back: **`link`** (not
 overrides the page URL), **`pubtype`** (not `type`, which drives layout lookup) and **`medium`** (not
 `kind`, removed as a front-matter key in Hugo 0.144).
 
-Those are front-matter rules only. Files under `data/` are plain maps Hugo never interprets, so
-`teaching.yaml` and `grants.yaml` can use `kind` for the rail label without trouble.
+Two more are optional. **`show_page`** opts a thin publication, media or talk item back into being
+linked and indexed, and **`abstract`** expands in place in the listing.
+
+Those reserved-key rules are front matter only. Files under `data/` are plain maps Hugo never
+interprets, so `teaching.yaml` and `grants.yaml` can use `kind` for the rail label without trouble.
 
 **Hand-maintained lists live in `data/`**, not in content. `teaching.yaml` and `grants.yaml` each
 feed their own homepage section and their own page, `/teaching/` and `/awards/`; `experience.yaml`

@@ -26,9 +26,14 @@
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $desc | plainify | truncate 180 }}">
 <link rel="canonical" href="{{ .Permalink }}">
-{{- if ne hugo.Environment "production" }}
-{{- /* The staging vhost is real HTTPS on a resolvable name, and canonical and
-       og:url below carry that host, so keep it out of the index. */}}
+{{- /* Two reasons, one tag. The staging vhost is real HTTPS on a resolvable
+       name, and canonical and og:url below carry that host, so keep it out of
+       the index. And a page the listings do not link to has nothing on it worth
+       indexing, so it stays out too rather than sitting in search results as a
+       thinner copy of the row that should have been found instead. */ -}}
+{{- $noindex := ne hugo.Environment "production" -}}
+{{- if not (partial "showpage.html" .) }}{{ $noindex = true }}{{ end }}
+{{- if $noindex }}
 <meta name="robots" content="noindex, nofollow">
 {{- end }}
 

@@ -8,6 +8,11 @@
 # The span uses the rail's label slot rather than a wider date column because
 # "2019–2022" cannot sit on one line at the size the year is set in. These
 # entries carry no `kind` for the same reason, the slot being taken.
+#
+# A `page` would make the title click through. Two of these posts match a
+# project page, Oxford Martin and Female-Breadwinner Families in Europe, but
+# both of those pages have empty bodies and so fail the same test that stopped
+# the publications and media rows linking. One line each if they ever fill up.
 
 - title: "Assistant Professor in Sociology and Social Policy"
   org: "Department of Social and Policy Sciences, University of Bath"

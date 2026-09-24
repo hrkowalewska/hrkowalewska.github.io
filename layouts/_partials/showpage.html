@@ -1,0 +1,21 @@
+{{- /*
+  Whether this item's own page is worth visiting. Decides both the title link
+  in a listing and whether search engines are told the page exists, so the two
+  cannot say different things.
+
+  Publications, media and talks record work that lives somewhere else. Their
+  pages hold a breadcrumb, a title and a link out, all of which the listing row
+  already shows, and page.html does not even render the summary. So they are
+  flat unless an item opts in with `show_page: true`, which is what a page with
+  a real body should carry.
+
+  Everything else is linked. Note this is a section rule rather than "does the
+  page have a body", which looks tempting and is wrong: two project pages have
+  no body either, and their "Project site" chip is the only route from
+  /project/ to the project itself.
+
+  Called with a Page. Section list pages and the home page are never thin, so
+  they short-circuit on .IsPage.
+*/ -}}
+{{- $thin := slice "publication" "media" "talk" -}}
+{{- return or (not .IsPage) (not (in $thin .Section)) .Params.show_page -}}

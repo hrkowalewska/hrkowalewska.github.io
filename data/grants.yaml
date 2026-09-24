@@ -8,6 +8,10 @@
 # word, because the rail is only as wide as a four-digit year.
 #
 # `note` is optional Markdown and renders as its own paragraph under the org.
+#
+# `page` is where the title links to, and without it the title is flat. Three
+# of these funded projects that are written up at length on this site, so they
+# point at them. The rest have nowhere to go.
 - title: "Outstanding Contribution Award"
   kind: "Award"
   org: "University of Bath"
@@ -21,6 +25,7 @@
   org: "Purdue University Center for Families"
   date: "2025-05-21"
 - title: "BA/Leverhulme Small Research Grant"
+  page: "/project/too-old-to-hire-too-young-to-retire/"
   kind: "Grant"
   org: "University of Bath"
   date: "2025-01-01"
@@ -30,11 +35,13 @@
   org: "University of Bath"
   date: "2024-09-11"
 - title: "ESRC New Investigator Grant"
+  page: "/project/esrc-new-investigators-grant/"
   kind: "Grant"
   org: "University of Oxford"
   date: "2020-01-01"
   note: "Principal Investigator on the project, ‘Welfare State Interventions and Occupational Gender Segregation: Paradise or Paradox?’"
 - title: "ESRC Postdoctoral Fellowship"
+  page: "/project/social-policies-to-support-womens-employment/"
   kind: "Fellowship"
   org: "University of Southampton"
   date: "2018-10-01"

@@ -53,7 +53,10 @@
     {{- end }}
   </div>
   <div class="entry-body">
-    <h3 class="entry-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+    {{- /* Flat where the page adds nothing over this row. See showpage.html. */ -}}
+    {{- $href := "" -}}
+    {{- if partial "showpage.html" . }}{{ $href = .RelPermalink }}{{ end }}
+    <h3 class="entry-title">{{ with $href }}<a href="{{ . }}">{{ $.Title }}</a>{{ else }}{{ $.Title }}{{ end }}</h3>
 
     {{- $bits := slice -}}
     {{- with .Params.venue }}{{ $bits = $bits | append (printf "<cite>%s</cite>" .) }}{{ end -}}
