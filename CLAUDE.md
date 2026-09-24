@@ -78,6 +78,11 @@ hook in `layouts/_markup/`.
 is used by every listing on the site, working out the rail label and link chips from `.Section`. Add
 a content section and it needs a branch there; that is the only place section-specific logic lives.
 
+`_partials/stack.html` emits the same markup from a `data/` map rather than a Page, so every dated
+list on the site shares one set of CSS rules. The teaching, awards and experience lists had a
+quieter treatment of their own for a while and it drifted. The fix was to delete it rather than
+keep the two in step.
+
 **Content sections** are `publication`, `media`, `talk`, `project`, `take-part`, `authors` and
 `post` (retired, see below). Each page is a page bundle at `content/<section>/<slug>/index.md`, and
 each section has an `_index.md` supplying the list page title and intro. `content/teaching/` holds
@@ -88,19 +93,26 @@ chosen to dodge Hugo reserved keys and must not be renamed back: **`link`** (not
 overrides the page URL), **`pubtype`** (not `type`, which drives layout lookup) and **`medium`** (not
 `kind`, removed as a front-matter key in Hugo 0.144).
 
+Those are front-matter rules only. Files under `data/` are plain maps Hugo never interprets, so
+`teaching.yaml` and `grants.yaml` can use `kind` for the rail label without trouble.
+
 **Hand-maintained lists live in `data/`**, not in content. `teaching.yaml` and `grants.yaml` each
 feed their own homepage section and their own page, `/teaching/` and `/awards/`; `experience.yaml`
 renders as Experience on the About page; `statements.yaml` holds the hero questions. Adding a grant
-means adding three lines of YAML.
+means adding four lines of YAML.
 
 Experience is gated on `show_experience` in Helen's front matter, so a co-author's page does not
 list her posts under their name. The portrait is page-specific for the same reason.
 
 `grants.yaml` mixes funding with honours, which is why its heading is "Grants and awards" rather than
-naming one or the other. `_partials/stack.html` renders a dated list and is shared by every place
-these appear, so the caller slices the data and the partial does the markup. An entry may carry `end`
-to show a span instead of a year; the partial widens its date column by itself when any entry has
-one, so callers pass nothing extra.
+naming one or the other, and why each entry carries a `kind` naming which it is. Teaching uses the
+same field for her role, so the titles are bare unit names. The caller slices the data and
+`stack.html` does the markup, so callers pass nothing but a list.
+
+An entry may carry `end` to show a span. That renders as the start year over a "to 2022" or
+"Present" label rather than in a wider date column, because "2019–2022" will not fit on one line at
+the size the rail sets a year in. Nothing carries both `end` and `kind`, and `kind` wins if
+anything ever does.
 
 **The hero rotates.** Every question in `data/statements.yaml` renders into the `h1`, stacked in one
 grid cell so the hero reserves the height of the tallest and the rotation cannot move the bottom rule

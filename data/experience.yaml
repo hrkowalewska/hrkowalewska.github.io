@@ -1,10 +1,13 @@
 # Posts held, most recent first. Rendered as Experience on the About page by
 # layouts/authors/section.html, via _partials/stack.html.
 #
-# Same shape as teaching.yaml and grants.yaml, with one addition: `end`. Present
-# and empty means the post is current and the list shows "2022–"; present with a
-# date shows a range; absent shows a single year. The partial widens its date
-# column automatically when any entry carries an `end`.
+# Same shape as teaching.yaml and grants.yaml, plus `end`. Present and empty
+# means the post is current, so the rail reads "2022" over "Present". Present
+# with a date reads "2019" over "to 2022". Absent shows the year alone.
+#
+# The span uses the rail's label slot rather than a wider date column because
+# "2019–2022" cannot sit on one line at the size the year is set in. These
+# entries carry no `kind` for the same reason, the slot being taken.
 
 - title: "Assistant Professor in Sociology and Social Policy"
   org: "Department of Social and Policy Sciences, University of Bath"

@@ -1,35 +1,60 @@
 {{- /*
-  A dated list: year on the left, entry on the right. Used by the teaching,
-  awards and appointments sections and by their pages.
+  A dated list rendered as ledger rows, built from data rather than from pages.
+
+  `entry.html` is this same markup built from a Page. The two share every class,
+  so the teaching, awards and experience lists cannot drift away from the
+  publications and media ones again.
 
   Takes an already-sliced list, so the caller decides how many to show:
 
       {{ partial "stack.html" (first 4 hugo.Data.teaching) }}
       {{ partial "stack.html" hugo.Data.grants }}
 
-  An entry may carry `end` to show a span rather than a single year. Present and
-  empty means current, so it renders "2022–"; a date renders "2019–2022"; the
-  same year at both ends collapses back to one. The date column widens itself
-  when any entry in the list has an `end`, so callers pass nothing extra.
+  Per entry, `title`, `org` and `date` are required and everything else is
+  optional:
 
-  `note` is Markdown, which is how the unit handbook link works.
+    kind   the small rail label under the year, as the pubtype does on a
+           publication. `kind` is a Hugo reserved key in front matter but not
+           in data/, so here it can keep the name it wants.
+    end    renders the rail as a span instead. Present and empty means current,
+           so the label reads "Present"; a date reads "to 2022"; the same year
+           at both ends drops the label. A span cannot sit on one line at rail
+           size, which is why it uses the label slot rather than a wider column.
+    note   Markdown, its own paragraph under the org. This is how the grant
+           descriptions stay readable at 300-odd characters.
+    link   with `link_label`, rendered as a chip.
 */ -}}
-{{- $span := false -}}
-{{- range . }}{{ if isset . "end" }}{{ $span = true }}{{ end }}{{ end -}}
-<div class="stack{{ if $span }} stack-span{{ end }}">
-  {{- range . }}
-  {{- $when := substr .date 0 4 -}}
-  {{- if isset . "end" -}}
-    {{- $to := "" -}}
-    {{- with .end }}{{ $to = substr . 0 4 }}{{ end -}}
-    {{- if ne $to $when }}{{ $when = printf "%s&ndash;%s" $when $to }}{{ end -}}
+<div class="ledger">
+  {{- range $e := . }}
+  {{- $year := substr .date 0 4 -}}
+  {{- $rail := .kind | default "" -}}
+  {{- if and (not $rail) (isset . "end") -}}
+    {{- with .end -}}
+      {{- $to := substr . 0 4 -}}
+      {{- if ne $to $year }}{{ $rail = printf "to %s" $to }}{{ end -}}
+    {{- else -}}
+      {{- $rail = "Present" -}}
+    {{- end -}}
   {{- end }}
-  <div class="stack-item">
-    <span class="stack-when">{{ $when | safeHTML }}</span>
-    <div>
-      <p class="stack-what">{{ .title }}</p>
-      <p class="stack-where">{{ .org }}{{ with .note }} &middot; {{ . | markdownify }}{{ end }}</p>
+  <article class="entry">
+    <div class="entry-rail">
+      <span class="entry-year">{{ $year }}</span>
+      {{- with $rail }}
+      <span class="entry-kind">{{ . }}</span>
+      {{- end }}
     </div>
-  </div>
+    <div class="entry-body">
+      <p class="entry-title">{{ .title }}</p>
+      <p class="entry-venue">{{ .org }}</p>
+      {{- with .note }}
+      <p class="entry-venue">{{ . | markdownify }}</p>
+      {{- end }}
+      {{- with .link }}
+      <p class="entry-links">
+        <a class="chip" href="{{ . | relURL }}"{{ partial "extlink.html" . | safeHTMLAttr }}>{{ $e.link_label | default "Read" }}</a>
+      </p>
+      {{- end }}
+    </div>
+  </article>
   {{- end }}
 </div>
