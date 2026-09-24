@@ -12,6 +12,7 @@
 
     {{- $links := slice }}
     {{- with .Params.link }}{{ $links = $links | append (dict "label" "Read" "url" .) }}{{ end }}
+    {{- with .Params.pdf }}{{ with $.Resources.Get . }}{{ $links = $links | append (dict "label" "PDF" "url" .RelPermalink) }}{{ end }}{{ end }}
     {{- with .Params.doi }}{{ $links = $links | append (dict "label" (printf "DOI %s" .) "url" (printf "https://doi.org/%s" .)) }}{{ end }}
     {{- with .Params.external_link }}{{ $links = $links | append (dict "label" "Project site" "url" .) }}{{ end }}
     {{- with .Params.slides }}{{ with $.Resources.Get . }}{{ $links = $links | append (dict "label" "Slides" "url" .RelPermalink) }}{{ end }}{{ end }}

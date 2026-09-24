@@ -108,8 +108,10 @@ chosen to dodge Hugo reserved keys and must not be renamed back: **`link`** (not
 overrides the page URL), **`pubtype`** (not `type`, which drives layout lookup) and **`medium`** (not
 `kind`, removed as a front-matter key in Hugo 0.144).
 
-Two more are optional. **`show_page`** opts a thin publication, media or talk item back into being
-linked and indexed, and **`abstract`** expands in place in the listing.
+Three more are optional. **`show_page`** opts a thin publication, media or talk item back into being
+linked and indexed, **`abstract`** expands in place in the listing, and **`pdf`** names a file in the
+page bundle and renders it as a chip, the way a talk carries its `slides`. Carrying the file beats
+linking someone else's copy of it, which is how the 2018 report ended up pointing at a 404.
 
 Those reserved-key rules are front matter only. Files under `data/` are plain maps Hugo never
 interprets, so `teaching.yaml` and `grants.yaml` can use `kind` for the rail label without trouble.

@@ -24,6 +24,12 @@
         "conference-paper" "Conference<br>paper" -}}
   {{- $kindLabel = index $names (.Params.pubtype | default "other") | default "Other" -}}
   {{- with .Params.link }}{{ $links = $links | append (dict "label" "Read" "url" .) }}{{ end -}}
+  {{- /* A file in the bundle, the way a talk carries its slides, so the chip
+         cannot rot the way the 2018 report's link to the old WordPress site
+         did. Silently absent if the resource is not there. */ -}}
+  {{- with .Params.pdf -}}
+    {{- with $.Resources.Get . }}{{ $links = $links | append (dict "label" "PDF" "url" .RelPermalink) }}{{ end -}}
+  {{- end -}}
   {{- with .Params.doi }}{{ $links = $links | append (dict "label" (printf "DOI %s" .) "url" (printf "https://doi.org/%s" .)) }}{{ end -}}
 
 {{- else if eq .Section "media" -}}
