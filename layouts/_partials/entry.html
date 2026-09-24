@@ -12,6 +12,10 @@
 
 {{- $kindLabel := "" -}}
 {{- $links := slice -}}
+{{- /* What the expandable block calls itself. "Abstract" is right for a paper
+       and for a seminar, and wrong for episode notes on a podcast, so it is
+       derived here with everything else that depends on the section. */ -}}
+{{- $detailLabel := "Description" -}}
 
 {{- if eq .Section "publication" -}}
   {{- $names := dict
@@ -23,6 +27,7 @@
         "book"             "Book"
         "conference-paper" "Conference<br>paper" -}}
   {{- $kindLabel = index $names (.Params.pubtype | default "other") | default "Other" -}}
+  {{- $detailLabel = "Abstract" -}}
   {{- with .Params.link }}{{ $links = $links | append (dict "label" "Read" "url" .) }}{{ end -}}
   {{- /* A file in the bundle, the way a talk carries its slides, so the chip
          cannot rot the way the 2018 report's link to the old WordPress site
@@ -40,11 +45,13 @@
         "evidence"  "Evidence"
         "talk"      "Talk" -}}
   {{- $kindLabel = index $names (.Params.medium | default "press") | default "Press" -}}
+  {{- if eq .Params.medium "talk" }}{{ $detailLabel = "Abstract" }}{{ end -}}
   {{- $verb := cond (eq .Params.medium "broadcast") "Listen" "Read" -}}
   {{- with .Params.link }}{{ $links = $links | append (dict "label" $verb "url" .) }}{{ end -}}
 
 {{- else if eq .Section "talk" -}}
   {{- $kindLabel = "Talk" -}}
+  {{- $detailLabel = "Abstract" -}}
   {{- with .Params.slides -}}
     {{- with $.Resources.Get . }}{{ $links = $links | append (dict "label" "Slides" "url" .RelPermalink) }}{{ end -}}
   {{- end -}}
@@ -100,11 +107,13 @@
     </p>
     {{- end }}
 
-    {{- /* Abstracts live in front matter and these pages have empty bodies, so
-           they expand in place rather than sending the reader to a blank page. */ -}}
+    {{- /* Lives in front matter, and these pages have empty bodies, so it
+           expands in place rather than sending the reader to a blank page.
+           Not publication-only: a seminar carries an abstract and a podcast
+           carries its notes, which is why the label is worked out above. */ -}}
     {{- with .Params.abstract }}
     <details>
-      <summary>Abstract</summary>
+      <summary>{{ $detailLabel }}</summary>
       {{- /* Rendered as Markdown so a blank line in the front matter becomes a
              real paragraph. A hardcoded <p> could not, whatever was written. */}}
       <div class="abstract">{{ . | markdownify }}</div>

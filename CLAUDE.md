@@ -108,10 +108,15 @@ chosen to dodge Hugo reserved keys and must not be renamed back: **`link`** (not
 overrides the page URL), **`pubtype`** (not `type`, which drives layout lookup) and **`medium`** (not
 `kind`, removed as a front-matter key in Hugo 0.144).
 
-Three more are optional. **`show_page`** opts a thin publication, media or talk item back into being
-linked and indexed, **`abstract`** expands in place in the listing, and **`pdf`** names a file in the
-page bundle and renders it as a chip, the way a talk carries its `slides`. Carrying the file beats
-linking someone else's copy of it, which is how the 2018 report ended up pointing at a 404.
+Three more are optional. **`show_page`** opts a thin publication, media or talk item back into
+being linked and indexed, **`abstract`** expands in place in the listing, and **`pdf`** names a file
+in the page bundle and renders it as a chip, the way a talk carries its `slides`. Carrying the file
+beats linking someone else's copy, which is how the 2018 report ended up pointing at a 404.
+
+`abstract` is not publication-only. A seminar carries one and a podcast carries its episode notes,
+so `entry.html` works out what the disclosure calls itself alongside the rail label, in the same
+section branch. A publication or a talk says "Abstract", anything else says "Description". It could
+not be named `summary`, which is the one-line description every row already has.
 
 Those reserved-key rules are front matter only. Files under `data/` are plain maps Hugo never
 interprets, so `teaching.yaml` and `grants.yaml` can use `kind` for the rail label without trouble.
