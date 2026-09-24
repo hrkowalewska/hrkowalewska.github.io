@@ -6,7 +6,11 @@
 
 <section class="hero">
   <div class="wrap">
-    <div>
+    {{- /* Named so the stack below 52rem can reorder these three. There the
+           portrait, her name and the labels group as one centred block and the
+           question follows, because stacked in markup order the labels land
+           under the photograph and read as its caption. */}}
+    <div class="hero-intro">
       <p class="hero-eyebrow">
         <span class="label">{{ site.Params.field }}</span>
         <span class="label">{{ site.Params.institution }}</span>
@@ -26,7 +30,11 @@
         {{- /* Her title is self-contained; appending the department would read
                "...Sociology and Social Policy, Department of Social and Policy
                Sciences". The department is named and linked in the footer. */}}
-        <span>{{ $helen.Params.role }}</span>
+        {{- /* Her title names the university at every width, the way the About
+               page writes the same line. Below 52rem the eyebrow above is
+               hidden and this is the only mention of it in the hero; above,
+               the eyebrow repeats it, which is deliberate. */}}
+        <span>{{ $helen.Params.role }}, {{ site.Params.institution }}</span>
         {{- with site.Params.editorship }}<span>{{ . | markdownify }}</span>{{ end }}
       </p>
     </div>

@@ -638,7 +638,34 @@ img { max-width: 100%; height: auto; display: block; }
 
 @media (max-width: 52rem) {
   .hero > .wrap { grid-template-columns: 1fr; gap: 1.75rem; }
-  .hero-portrait { order: -1; max-width: 13rem; margin-bottom: 0; }
+  /* Centred, and no longer anchored: there is no bottom rule to meet once the
+     hero stacks. */
+  .hero-portrait { order: -1; max-width: 13rem; margin: 0 auto; }
+
+  /* Two groups, not four items. The photograph, her name and her title are who
+     she is; the labels and the question are what she works on, the labels
+     being the question's kicker exactly as they are on a wide screen.
+
+     Spacing is what says so. An even gap down all four left the labels
+     floating between the two, belonging to neither, and the question reading
+     as a leftover after them. So the gap is tight and the break above the
+     labels is wide.
+
+     In markup order none of this holds: the labels land under the photograph
+     and caption it, and her name sits a screen below past the whole question.
+     A grid only so they can be reordered. */
+  .hero-intro { display: grid; gap: 2.2rem; }
+  .hero-meta { order: -2; margin: 0; align-items: center; text-align: center; }
+  /* The eyebrow is a wide-screen device. Stacked it will not fit on one line,
+     and wherever it went it read as something's caption rather than as a
+     kicker. Its only load-bearing half was the university, which her title
+     names at every width, so there is nothing left for it to say here. */
+  .hero-eyebrow { display: none; }
+  /* Centred with everything else. Left-aligned it read as an orphan against a
+     centred column, which is worth more here than the argument for ranging a
+     three-line question left. */
+  .hero-statement { order: 0; text-align: center; margin-inline: auto; }
+
   .about-grid { grid-template-columns: 1fr; }
   .about-portrait { max-width: 11rem; }
 }

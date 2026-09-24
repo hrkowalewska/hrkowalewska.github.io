@@ -140,6 +140,18 @@ one accessible name. It does nothing at all under `prefers-reduced-motion`, whic
 global block cannot cover because that kills transitions but not timers. Without JavaScript the first
 question simply stays.
 
+**The hero regroups below 52rem.** Stacked in markup order it read badly: the eyebrow landed under
+the portrait and captioned it, and her name sat a screen below past the whole question. So
+`.hero-intro` becomes a grid there and `order` puts the portrait, her name and her title together as
+one centred block, with the question following and left alone. Above the breakpoint every `order` is
+inert and the two-column hero is untouched.
+
+The eyebrow is hidden there rather than moved. It is a wide-screen device, it will not fit on one
+line stacked, and wherever it went it read as something's caption. Its one load-bearing half was the
+university, and her title names that at every width, written the way the About page writes the same
+line. On a wide screen the eyebrow then says it again 282px above. That repetition is deliberate,
+chosen over moving it, so do not tidy it away.
+
 **Styling** is one hand-written file, `assets/css/main.css`, run through `resources.ExecuteAsTemplate`
 so it can interpolate the self-hosted font URLs from `assets/fonts/`. No Sass, no Tailwind, no build
 step beyond Hugo itself. Colours are `oklch` custom properties with light and dark defined on
