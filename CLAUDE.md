@@ -152,15 +152,41 @@ sections of which three are neither, it only ever read as a stray colour.
 
 A section keeps one accent everywhere it appears. `_partials/accent.html` holds the list,
 `home.html` reads it for each block and `baseof.html` puts the class on `<main>`, so a whole page
-inherits its section's accent and single pages come along for free. The homepage still alternates, because its
-running order and that list are arranged to. They used to disagree, which is why clicking an ochre
-block landed on a teal page. Reorder the homepage and the list has to follow.
+inherits its section's accent and single pages come along for free. The homepage still alternates,
+because its running order and that list are arranged to. They used to disagree, which is why
+clicking an ochre block landed on a teal page. Reorder the homepage and the list has to follow.
 
 Components never name an accent. They read `var(--accent)`, which `:root` sets to the first and
 `.accent-alt` flips. Adding a section is one entry in that list, not a set of override rules.
 
 Minification and fingerprinting are gated on `hugo.IsServer`, not `hugo.IsProduction`, so only the
 dev server skips them and a staging build is otherwise byte-identical to production.
+
+**The nav is a drawer below 52rem.** Seven links wrapped onto two rows under the name and left a
+sticky 186px masthead on every phone, 28% of an iPhone SE, held all the way down an 18-screen
+archive. It is 61px at every width now.
+
+There is one `<nav>` in the markup, not two. `nav-drawer-js.html` adds `.has-drawer` at load and
+only then does the CSS switch to drawer mode and reveal the button. With JavaScript off the button
+never appears and the nav keeps its wrapping row, so the fallback is what the site did before rather
+than a site with no navigation.
+
+Focus is contained by marking `<main>` and the footer `inert`, not by a hand-written trap. The
+closed panel is marked `inert` too, and that, rather than `visibility: hidden`, is what keeps it out
+of the tab order while it waits off-screen. The CSS version looks tidier and does not work: a
+transitioned `visibility` holds its computed value until the transition ends and nothing hidden can
+take focus, so the script cannot move focus into a panel already visible on screen. Since that
+`inert` must not apply to the ordinary nav row, it is scoped to the breakpoint in the script.
+
+One other trap. `backdrop-filter` is dropped below 52rem, because it makes an element the containing
+block for fixed-position descendants, which would strand the panel inside the bar.
+
+**Touch targets live in one `@media (pointer: coarse)` block**, so the wide-screen density is
+untouched. Every control was under 44px and two were under the 24px WCAG 2.5.8 floor. Hit area comes
+from padding, so nothing changes size to the eye. Two deliberate exceptions. Chips stay at 46x27,
+already over the floor, because 44px chips would be the heaviest thing on a page of hairlines. And a
+one-line entry title gets a positioned pseudo-element rather than padding, reaching about 28px,
+because an inline element's target is its font box and padding it moved every row down.
 
 **The theme control has three states**, auto, light and dark, cycled in that order. Auto is the
 absence of a choice rather than a value: it removes `data-theme` and clears the stored key, so the

@@ -74,7 +74,11 @@
 
   --measure: 62ch;
   --gutter: clamp(1.25rem, 4vw, 3rem);
-  --rail: clamp(3.5rem, 9vw, 6.5rem);
+  /* The floor fits the widest rail label, not the year. "DEMONSTRATOR" needs
+     5.1rem at the label's size and a 3.5rem floor left it spilling 26px onto
+     the title everywhere from 545px to about 910px. Below 545px the rail
+     collapses to a row and this is unused. */
+  --rail: clamp(5.25rem, 9vw, 6.5rem);
 
   color-scheme: light dark;
 }
@@ -142,7 +146,6 @@ h1, h2, h3, h4 {
 }
 
 a { color: inherit; text-decoration-color: var(--rule-strong); text-underline-offset: 0.2em; }
-a:hover { text-decoration-color: currentColor; }
 
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
 
@@ -174,9 +177,13 @@ img { max-width: 100%; height: auto; display: block; }
   background: color-mix(in oklab, var(--paper) 88%, transparent);
   backdrop-filter: blur(8px);
 }
+.masthead {
+  /* Shared with the drawer, which starts where the bar ends. */
+  --bar: 3.75rem;
+}
 .masthead > .wrap {
   display: flex; align-items: center; gap: 1.5rem;
-  min-height: 3.75rem; flex-wrap: wrap;
+  min-height: var(--bar); flex-wrap: wrap;
 }
 .masthead-name {
   font-family: var(--font-display); font-weight: 600; font-size: 0.95rem;
@@ -188,7 +195,6 @@ img { max-width: 100%; height: auto; display: block; }
   text-decoration: none; color: var(--ink-soft);
   padding-block: 0.35rem; border-bottom: 2px solid transparent;
 }
-.masthead nav a:hover,
 .masthead nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--ink); }
 
 .theme-toggle {
@@ -200,7 +206,110 @@ img { max-width: 100%; height: auto; display: block; }
      beside it does not shift each time the label changes. */
   min-width: 4.25rem; text-align: center;
 }
-.theme-toggle:hover { border-color: var(--rule-strong); color: var(--ink); }
+
+/* --- mobile nav drawer ---------------------------------------------------
+   Seven links wrapped onto two rows under the name and left a sticky 186px
+   header on every phone, 28% of an iPhone SE, held the whole way down an
+   18-screen archive. 52rem is the switch because that is where the row fits
+   unaided, measured at 61px.
+
+   Everything here is gated on .has-drawer, which nav-drawer-js.html adds at
+   load, so with no JavaScript the button stays hidden and the nav keeps the
+   wrapping row. The fallback is what the site did before, not a site with no
+   navigation.                                                               */
+
+.nav-toggle { display: none; }
+.nav-backdrop { display: none; }
+
+@media (max-width: 52rem) {
+  /* backdrop-filter makes an element the containing block for fixed-position
+     descendants, which would trap the panel inside the bar. The blur is a
+     wide-screen nicety, so drop it here and go opaque, which reads better over
+     a scrolling page on a small screen anyway. */
+  .has-drawer {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  /* Above the backdrop, so the bar stays lit and usable while the drawer is
+     open. This cannot be what lifts it above the panel as well: the nav is a
+     child of .wrap, so a z-index here makes a stacking context and the panel's
+     own z-index stacks inside it, over the buttons beside it. The panel is
+     kept clear of the bar geometrically instead, below. */
+  .has-drawer > .wrap { position: relative; z-index: 7; }
+
+  .has-drawer .nav-toggle {
+    display: grid; place-items: center;
+    order: 1;                       /* last in the row, without moving markup */
+    width: 44px; height: 44px; margin-right: -0.6rem;
+    background: none; border: 0; padding: 0;
+    color: var(--ink); cursor: pointer;
+  }
+  .nav-toggle-bars, .nav-toggle-bars::before, .nav-toggle-bars::after {
+    display: block; width: 18px; height: 2px; background: currentColor;
+    transition: transform 0.2s ease, background-color 0.2s ease, top 0.2s ease;
+  }
+  .nav-toggle-bars { position: relative; }
+  .nav-toggle-bars::before, .nav-toggle-bars::after { content: ""; position: absolute; left: 0; }
+  .nav-toggle-bars::before { top: -6px; }
+  .nav-toggle-bars::after { top: 6px; }
+  /* Open, the three bars fold into a cross. */
+  .is-open .nav-toggle-bars { background: transparent; }
+  .is-open .nav-toggle-bars::before { top: 0; transform: rotate(45deg); }
+  .is-open .nav-toggle-bars::after { top: 0; transform: rotate(-45deg); }
+
+  .has-drawer nav {
+    /* Starts where the bar's rule ends rather than sliding under it, so the
+       name, the theme control and the close button all stay visible and
+       tappable. The 1px is that rule, which belongs to the masthead. */
+    position: fixed; inset: calc(var(--bar) + 1px) 0 0 auto; z-index: 6;
+    width: min(80vw, 20rem);
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: var(--paper);
+    border-left: 1px solid var(--rule);
+    overflow-y: auto;
+    /* Off-screen only. Keeping the closed panel out of the tab order is the
+       script's job, through inert, rather than visibility: hidden here.
+       Transitioning visibility holds its computed value at hidden for the
+       length of the transition, and a hidden element cannot take focus, so the
+       script could not move focus into a panel already visible on screen. The
+       reduced-motion block made that worse rather than better by forcing every
+       duration to 0.01ms, which kept the trap and shrank it to something that
+       only failed sometimes. Being position: fixed, the panel adds nothing to
+       the document's scrollable width while it sits out there. */
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .has-drawer.is-open nav { transform: none; }
+
+  .has-drawer nav a {
+    display: flex; align-items: center; min-height: 48px;
+    padding: 0.7rem var(--gutter);
+    font-size: 1rem;
+    border-bottom: 1px solid var(--rule);
+    /* The row is the target now, so the underline marker becomes an edge. */
+    border-left: 3px solid transparent;
+  }
+  .has-drawer nav a[aria-current="page"] {
+    color: var(--ink); border-left-color: var(--accent); border-bottom-color: var(--rule);
+  }
+
+  .has-drawer .nav-backdrop {
+    /* Starts level with the panel, so the bar reads as part of the layer that
+       is still live rather than as dimmed chrome with usable buttons on it. */
+    display: block; position: fixed; inset: calc(var(--bar) + 1px) 0 0 0; z-index: 5;
+    /* Neutral, not --ink. In dark mode --ink is nearly white, so the scrim
+       lightened the page behind and left the dimmed content brighter than the
+       panel over it, which is the wrong way round. Darkening works in both. */
+    background: oklch(0 0 0 / 0.45);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.28s ease;
+  }
+  .has-drawer.is-open .nav-backdrop { opacity: 1; pointer-events: auto; }
+}
+
+/* Set by the script while the drawer is open. */
+.nav-open, .nav-open body { overflow: hidden; }
 
 /* --- hero ----------------------------------------------------------------
    The portrait is the only warm, photographic thing on an otherwise cool and
@@ -291,7 +400,6 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .section-head .label { white-space: nowrap; }
 .section-head a.more { font-family: var(--font-display); font-size: 0.875rem; font-weight: 500; color: var(--ink-soft); }
-.section-head a.more:hover { color: var(--ink); }
 
 /* --- the year rail ledger ------------------------------------------------
    Every dated list on the site, whether its rows come from pages via
@@ -330,7 +438,6 @@ img { max-width: 100%; height: auto; display: block; }
   margin: 0; text-wrap: pretty;
 }
 .entry-title a { text-decoration: none; }
-.entry-title a:hover { text-decoration: underline; text-decoration-color: var(--accent); }
 
 .entry-venue { margin: 0.4rem 0 0; font-size: 0.95rem; color: var(--ink-soft); }
 .entry-venue cite { font-style: italic; }
@@ -343,7 +450,6 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--ink-soft); border: 1px solid var(--rule);
   padding: 0.22rem 0.5rem; border-radius: var(--radius-ctl); white-space: nowrap;
 }
-.chip:hover { border-color: var(--accent); color: var(--accent); }
 
 /* Abstracts live in front matter and the single pages have empty bodies, so
    they expand in place rather than sending the reader to a near-blank page. */
@@ -357,7 +463,6 @@ img { max-width: 100%; height: auto; display: block; }
 .entry summary::-webkit-details-marker { display: none; }
 .entry summary::before { content: "+"; font-size: 0.85rem; line-height: 1; color: var(--accent); }
 .entry details[open] summary::before { content: "\2212"; }
-.entry summary:hover { color: var(--ink); }
 .entry details .abstract {
   margin: 0.65rem 0 0; max-width: var(--measure);
   font-size: 0.975rem; color: var(--ink-soft);
@@ -408,7 +513,6 @@ img { max-width: 100%; height: auto; display: block; }
 .prose > :first-child { margin-top: 0; }
 .prose p:last-child { margin-bottom: 0; }
 .prose a { color: var(--accent); text-decoration-color: var(--accent-hair); }
-.prose a:hover { text-decoration-color: var(--accent); }
 
 /* --- call to action ------------------------------------------------------
    The take-part page's only button. Square, like everything else, and it
@@ -426,7 +530,6 @@ img { max-width: 100%; height: auto; display: block; }
   padding: 0.8rem 1.4rem;
   border-radius: var(--radius-ctl);
 }
-.cta a:hover { background: var(--ink); }
 
 /* --- footer -------------------------------------------------------------- */
 
@@ -449,7 +552,6 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .footer-links { display: flex; flex-direction: column; gap: 0.35rem; }
 .footer-links a { font-size: 0.925rem; color: var(--ink-soft); text-decoration: none; width: fit-content; }
-.footer-links a:hover { color: var(--ink); text-decoration: underline; }
 .colophon {
   margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
   font-family: var(--font-mono); font-size: 0.6875rem; color: var(--ink-faint); letter-spacing: 0.03em;
@@ -549,10 +651,63 @@ img { max-width: 100%; height: auto; display: block; }
   .entry-year { font-size: 1.1rem; }
 }
 
+/* --- pointing devices ----------------------------------------------------
+   Every :hover rule on the site lives here rather than beside its component,
+   because on a touch screen a tapped element can keep its hover state. In the
+   nav that mattered for more than tidiness: hover drew the same underline as
+   aria-current, so a tapped link went on claiming to be the current page.    */
+
+@media (hover: hover) {
+  a:hover { text-decoration-color: currentColor; }
+  .masthead nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+  .theme-toggle:hover { border-color: var(--rule-strong); color: var(--ink); }
+  .section-head a.more:hover { color: var(--ink); }
+  .entry-title a:hover { text-decoration: underline; text-decoration-color: var(--accent); }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .entry summary:hover { color: var(--ink); }
+  .prose a:hover { text-decoration-color: var(--accent); }
+  .cta a:hover { background: var(--ink); }
+  .footer-links a:hover { color: var(--ink); text-decoration: underline; }
+}
+
+/* --- touch ---------------------------------------------------------------
+   Measured at 375px, every control was under 44px tall and two were under the
+   24px WCAG 2.5.8 floor: the section "more" links and the abstract disclosure,
+   both 22px. The fix is hit area through padding, so nothing changes size to
+   the eye and the wide-screen density is untouched.
+
+   Chips are left alone. At 46x27 they already clear 24px, and 44px chips would
+   be the heaviest thing on a page built from hairlines, so they get spacing
+   instead.                                                                   */
+
+@media (pointer: coarse) {
+  .masthead-name { display: flex; align-items: center; min-height: 44px; }
+  .theme-toggle { padding-block: 0.8rem; }
+  .section-head a.more { display: inline-flex; align-items: center; min-height: 44px; }
+  .entry summary { min-height: 44px; }
+  .footer-links { gap: 0.15rem; }
+  .footer-links a { display: flex; align-items: center; min-height: 44px; }
+  .entry-links { gap: 0.6rem 0.6rem; }
+  .cta a { padding-block: 1rem; }
+  /* A one-line title link was 18px tall, since an inline element's target is
+     its font box and neither line-height nor the row around it enlarges that.
+     Padding it moves every row down, measurably by 18px, so the target is
+     grown with a positioned pseudo-element, which takes no part in layout.
+
+     0.3rem each way, not more. The venue line sits 0.4rem below, and on a
+     media row that line carries its own links, so a deeper reach would put an
+     invisible title target over them. That lands at about 28px, over the 24px
+     WCAG 2.5.8 floor rather than at the 44px ideal, which is the most this can
+     have without either moving the row or swallowing the link beneath it. */
+  .entry-title a { position: relative; }
+  .entry-title a::after { content: ""; position: absolute; inset: -0.3rem 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 }

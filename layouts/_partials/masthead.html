@@ -1,7 +1,7 @@
 <header class="masthead">
   <div class="wrap">
     <a class="masthead-name" href="{{ "/" | relURL }}">{{ site.Title }}</a>
-    <nav aria-label="Sections">
+    <nav id="site-nav" aria-label="Sections">
       {{- /* Menu entries are defined by URL in menus.toml, so they carry no
              .Page and neither .IsDescendant nor .IsMenuCurrent matches. Compare
              the paths directly: exact match for the section page itself, prefix
@@ -21,5 +21,17 @@
     <button class="theme-toggle" id="theme-toggle" type="button"
             title="Theme: follow system settings"
             aria-label="Theme: follow system settings">Auto</button>
+
+    {{- /* Hidden until nav-drawer-js.html marks the masthead, so with no
+           JavaScript there is no button that does nothing and the nav above
+           keeps the wrapping row it has always had. CSS puts this last in the
+           row rather than markup, so the tab order still follows the reading
+           order on wide screens. */ -}}
+    <button class="nav-toggle" id="nav-toggle" type="button"
+            aria-controls="site-nav" aria-expanded="false" aria-label="Menu">
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+    </button>
   </div>
+  {{- /* Outside .wrap so it covers the page rather than sitting in the bar. */}}
+  <div class="nav-backdrop" id="nav-backdrop"></div>
 </header>
