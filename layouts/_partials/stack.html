@@ -16,10 +16,11 @@
     kind   the small rail label under the year, as the pubtype does on a
            publication. `kind` is a Hugo reserved key in front matter but not
            in data/, so here it can keep the name it wants.
-    end    renders the rail as a span instead. Present and empty means current,
-           so the label reads "Present"; a date reads "to 2022"; the same year
-           at both ends drops the label. A span cannot sit on one line at rail
-           size, which is why it uses the label slot rather than a wider column.
+    end    renders the rail as a span. Present and empty means still running,
+           and shows as a trailing dash on the year itself, "2025–", which
+           leaves the label free for `kind`. A date instead reads "to 2022" in
+           the label, because a closed span will not sit on one line at the
+           size the year is set in. The same year at both ends shows neither.
     note   Markdown, its own paragraph under the org. This is how the grant
            descriptions stay readable at 300-odd characters.
     link   with `link_label`, rendered as a chip.
@@ -33,12 +34,18 @@
   {{- range $e := . }}
   {{- $year := substr .date 0 4 -}}
   {{- $rail := .kind | default "" -}}
-  {{- if and (not $rail) (isset . "end") -}}
+  {{- if isset . "end" -}}
     {{- with .end -}}
+      {{- /* A closed span needs the label slot, because "2019–2022" will not
+             sit on one line at the size the year is set in. So it and `kind`
+             cannot both show, and `kind` wins. Nothing needs both. */ -}}
       {{- $to := substr . 0 4 -}}
-      {{- if ne $to $year }}{{ $rail = printf "to %s" $to }}{{ end -}}
+      {{- if and (not $rail) (ne $to $year) }}{{ $rail = printf "to %s" $to }}{{ end -}}
     {{- else -}}
-      {{- $rail = "Present" -}}
+      {{- /* Still running. One character on the year says so and leaves the
+             label free, which is what lets a teaching entry show both its
+             role and its span. */ -}}
+      {{- $year = printf "%s–" $year -}}
     {{- end -}}
   {{- end }}
   <article class="entry">

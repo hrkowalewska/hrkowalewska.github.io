@@ -2,12 +2,12 @@
 # layouts/authors/section.html, via _partials/stack.html.
 #
 # Same shape as teaching.yaml and grants.yaml, plus `end`. Present and empty
-# means the post is current, so the rail reads "2022" over "Present". Present
-# with a date reads "2019" over "to 2022". Absent shows the year alone.
+# means the post is current, so the rail reads "2022–". Present with a date
+# reads "2019" over "to 2022". Absent shows the year alone.
 #
-# The span uses the rail's label slot rather than a wider date column because
-# "2019–2022" cannot sit on one line at the size the year is set in. These
-# entries carry no `kind` for the same reason, the slot being taken.
+# A closed span uses the label slot because "2019–2022" cannot sit on one line
+# at the size the year is set in, so those entries cannot also carry a `kind`.
+# An open one costs one character on the year and leaves the label free.
 #
 # A `page` would make the title click through. Two of these posts match a
 # project page, Oxford Martin and Female-Breadwinner Families in Europe, but

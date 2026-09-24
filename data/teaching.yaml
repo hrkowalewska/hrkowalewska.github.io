@@ -13,7 +13,10 @@
 - title: "Sociology of the Family and Family Policy"
   kind: "Unit convenor"
   org: "University of Bath"
-  date: "2026-10-03"
+  # Convened since 2025 and still running. Only the year is read, and the empty
+  # `end` is what adds the trailing dash.
+  date: "2025-10-03"
+  end: ""
   note: "Second/third-year module for BSc degrees."
   link: "/teaching/sociology-of-the-family-and-family-policy-unit-handbook.pdf"
   link_label: "Handbook"

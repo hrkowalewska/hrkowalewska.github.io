@@ -127,10 +127,11 @@ naming one or the other, and why each entry carries a `kind` naming which it is.
 same field for her role, so the titles are bare unit names. The caller slices the data and
 `stack.html` does the markup, so callers pass nothing but a list.
 
-An entry may carry `end` to show a span. That renders as the start year over a "to 2022" or
-"Present" label rather than in a wider date column, because "2019–2022" will not fit on one line at
-the size the rail sets a year in. Nothing carries both `end` and `kind`, and `kind` wins if
-anything ever does.
+An entry may carry `end` to show a span. Still running, it is a trailing dash on the year, "2025–".
+Ended, it is a "to 2022" label under the start year, because a closed span will not fit on one line
+at the size the rail sets a year in. That difference matters, because the label slot is also where
+`kind` goes: an open span can carry a role and a closed one cannot, and `kind` wins if both are
+set.
 
 **The hero rotates.** Every question in `data/statements.yaml` renders into the `h1`, stacked in one
 grid cell so the hero reserves the height of the tallest and the rotation cannot move the bottom rule
