@@ -1,0 +1,72 @@
+{{- /*
+  A dated list rendered as ledger rows, built from data rather than from pages.
+
+  `entry.html` is this same markup built from a Page. The two share every class,
+  so the teaching, awards and experience lists cannot drift away from the
+  publications and media ones again.
+
+  Takes an already-sliced list, so the caller decides how many to show:
+
+      {{ partial "stack.html" (first 4 hugo.Data.teaching) }}
+      {{ partial "stack.html" hugo.Data.grants }}
+
+  Per entry, `title`, `org` and `date` are required and everything else is
+  optional:
+
+    kind   the small rail label under the year, as the pubtype does on a
+           publication. `kind` is a Hugo reserved key in front matter but not
+           in data/, so here it can keep the name it wants.
+    end    renders the rail as a span. Present and empty means still running,
+           and shows as a trailing dash on the year itself, "2025–", which
+           leaves the label free for `kind`. A date instead reads "to 2022" in
+           the label, because a closed span will not sit on one line at the
+           size the year is set in. The same year at both ends shows neither.
+    note   Markdown, its own paragraph under the org. This is how the grant
+           descriptions stay readable at 300-odd characters.
+    link   with `link_label`, rendered as a chip.
+    page   where the title links to, which is nowhere unless it is set. Not to
+           be confused with `link`: that is a chip out to somewhere else, this
+           is the row's own click-through. A content row gets the same thing
+           from `show_page`, and both default to a flat title for the same
+           reason, which is that most of these pages have nothing on them.
+*/ -}}
+<div class="ledger">
+  {{- range $e := . }}
+  {{- $year := substr .date 0 4 -}}
+  {{- $rail := .kind | default "" -}}
+  {{- if isset . "end" -}}
+    {{- with .end -}}
+      {{- /* A closed span needs the label slot, because "2019–2022" will not
+             sit on one line at the size the year is set in. So it and `kind`
+             cannot both show, and `kind` wins. Nothing needs both. */ -}}
+      {{- $to := substr . 0 4 -}}
+      {{- if and (not $rail) (ne $to $year) }}{{ $rail = printf "to %s" $to }}{{ end -}}
+    {{- else -}}
+      {{- /* Still running. One character on the year says so and leaves the
+             label free, which is what lets a teaching entry show both its
+             role and its span. */ -}}
+      {{- $year = printf "%s–" $year -}}
+    {{- end -}}
+  {{- end }}
+  <article class="entry">
+    <div class="entry-rail">
+      <span class="entry-year">{{ $year }}</span>
+      {{- with $rail }}
+      <span class="entry-kind">{{ . }}</span>
+      {{- end }}
+    </div>
+    <div class="entry-body">
+      <p class="entry-title">{{ with .page }}<a href="{{ . | relURL }}">{{ $e.title }}</a>{{ else }}{{ $e.title }}{{ end }}</p>
+      <p class="entry-venue">{{ .org }}</p>
+      {{- with .note }}
+      <p class="entry-venue">{{ . | markdownify }}</p>
+      {{- end }}
+      {{- with .link }}
+      <p class="entry-links">
+        <a class="chip" href="{{ . | relURL }}"{{ partial "extlink.html" . | safeHTMLAttr }}>{{ $e.link_label | default "Read" }}</a>
+      </p>
+      {{- end }}
+    </div>
+  </article>
+  {{- end }}
+</div>

@@ -1,0 +1,72 @@
+{{- $fonts := dict
+      "archivo"     (resources.Get "fonts/archivo.woff2").RelPermalink
+      "sourceserif" (resources.Get "fonts/sourceserif.woff2").RelPermalink
+      "plexmono"    (resources.Get "fonts/plexmono.woff2").RelPermalink -}}
+{{- $css := resources.Get "css/main.css"
+      | resources.ExecuteAsTemplate "css/main.css" (dict "fonts" $fonts) -}}
+{{- /* Only the dev server skips this. Gating on hugo.IsProduction would leave
+       the staging build serving unminified, unfingerprinted CSS, which is not
+       what ships and so not what should be reviewed. */ -}}
+{{- if not hugo.IsServer -}}
+  {{- $css = $css | minify | fingerprint -}}
+{{- end -}}
+
+{{- /* Description falls back through page summary, then site tagline. */ -}}
+{{- $desc := .Description | default .Summary | default site.Params.description -}}
+{{- /* The site is named after Helen, so her own author page would otherwise
+       read "Helen Kowalewska | Helen Kowalewska". */ -}}
+{{- $title := site.Title -}}
+{{- if and (not .IsHome) (ne .Title site.Title) -}}
+  {{- $title = printf "%s | %s" .Title site.Title -}}
+{{- end -}}
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $desc | plainify | truncate 180 }}">
+<link rel="canonical" href="{{ .Permalink }}">
+{{- /* Two reasons, one tag. The staging vhost is real HTTPS on a resolvable
+       name, and canonical and og:url below carry that host, so keep it out of
+       the index. And a page the listings do not link to has nothing on it worth
+       indexing, so it stays out too rather than sitting in search results as a
+       thinner copy of the row that should have been found instead. */ -}}
+{{- $noindex := ne hugo.Environment "production" -}}
+{{- if not (partial "showpage.html" .) }}{{ $noindex = true }}{{ end }}
+{{- if $noindex }}
+<meta name="robots" content="noindex, nofollow">
+{{- end }}
+
+{{- /* Self-hosted, so preload rather than waiting on the CSS to discover them. */}}
+<link rel="preload" as="font" type="font/woff2" href="{{ $fonts.archivo }}" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="{{ $fonts.sourceserif }}" crossorigin>
+<link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ with $css.Data.Integrity }} integrity="{{ . }}"{{ end }}>
+
+<meta property="og:type" content="{{ cond .IsPage "article" "website" }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $desc | plainify | truncate 180 }}">
+<meta property="og:url" content="{{ .Permalink }}">
+{{- /* A square share image, not the 1.91:1 large-card size. The only photo we
+       have is a 4:5 portrait, and cropping that to a wide card can only produce
+       an extreme close-up. A square headshot with the smaller card type reads
+       properly everywhere instead. */ -}}
+{{- with site.Params.portrait }}{{ with resources.Get . }}
+{{- $og := .Process "fill 1200x1200 webp q85 smart" }}
+<meta property="og:image" content="{{ $og.Permalink }}">
+<meta property="og:image:width" content="{{ $og.Width }}">
+<meta property="og:image:height" content="{{ $og.Height }}">
+<meta property="og:image:alt" content="Helen Kowalewska">
+{{- end }}{{ end }}
+<meta name="twitter:card" content="summary">
+
+{{ with .OutputFormats.Get "rss" -}}
+<link rel="alternate" type="application/rss+xml" href="{{ .Permalink }}" title="{{ site.Title }}">
+{{- end }}
+
+{{- /* Set the theme before first paint so a dark-mode reader never sees a
+       white flash. Kept inline and tiny for exactly that reason. */}}
+<script>
+(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+</head>

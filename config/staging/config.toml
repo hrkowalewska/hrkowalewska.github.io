@@ -1,0 +1,9 @@
+# Staging overrides, merged over config/_default/ when Hugo runs with
+# `--environment staging`. See `poe staging` in poe_tasks.yaml.
+#
+# Everything else is deliberately identical to production so that what Helen
+# reviews is what ships. The only differences in the built output are this
+# baseURL and the `noindex` tag that layouts/_partials/head.html adds for any
+# non-production environment.
+
+baseurl = "https://helen-staging.kowfam.uk/"

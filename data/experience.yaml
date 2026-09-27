@@ -1,0 +1,40 @@
+# Posts held, most recent first. Rendered as Experience on the About page by
+# layouts/authors/section.html, via _partials/stack.html.
+#
+# Same shape as teaching.yaml and grants.yaml, plus `end`. Present and empty
+# means the post is current, so the rail reads "2022–". Present with a date
+# reads "2019" over "to 2022". Absent shows the year alone.
+#
+# A closed span uses the label slot because "2019–2022" cannot sit on one line
+# at the size the year is set in, so those entries cannot also carry a `kind`.
+# An open one costs one character on the year and leaves the label free.
+#
+# A `page` would make the title click through. Two of these posts match a
+# project page, Oxford Martin and Female-Breadwinner Families in Europe, but
+# both of those pages have empty bodies and so fail the same test that stopped
+# the publications and media rows linking. One line each if they ever fill up.
+
+- title: "Assistant Professor in Sociology and Social Policy"
+  org: "Department of Social and Policy Sciences, University of Bath"
+  date: "2022-07-07"
+  end: ""
+
+- title: "Postdoctoral Research Officer"
+  org: "Oxford Martin Programme on Inequality and Prosperity, University of Oxford"
+  date: "2019-08-27"
+  end: "2022-07-06"
+
+- title: "Postdoctoral Research Fellow"
+  org: "Economic and Social Research Council (ESRC), University of Southampton"
+  date: "2018-10-01"
+  end: "2019-08-26"
+
+- title: "Research Fellow"
+  org: "ESRC-funded project ‘Female-Breadwinner Families in Europe’, University of Southampton"
+  date: "2018-04-01"
+  end: "2018-09-25"
+
+- title: "Researcher"
+  org: "Ministry of Housing, Communities and Local Government"
+  date: "2017-10-01"
+  end: "2018-03-31"

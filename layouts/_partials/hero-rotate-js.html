@@ -1,0 +1,61 @@
+<script>
+// Steps the hero through each question once, seven seconds apart, then stops on
+// the last. Deliberately not a loop: a heading that never settles is a
+// distraction beside body copy.
+//
+// Three states rather than two, because a span needs to know which way it is
+// going: waiting off to the right, current, or leaving to the left. The leaving
+// class is cleared once the slide finishes so the span returns to the waiting
+// position rather than sitting on the wrong side.
+//
+// The stylesheet's global reduced-motion block kills the slide but cannot stop
+// a timer, so the motion preference is checked here too.
+(function () {
+  var h = document.getElementById('hero-statement');
+  if (!h) return;
+
+  var lines = h.getElementsByTagName('span');
+  if (lines.length < 2) return;
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (reduce && reduce.matches) return;
+
+  var i = 0, timer = null;
+  var HOLD = 7000;    // how long each question is readable
+  var SLIDE = 600;    // a little longer than the transform in the stylesheet
+
+  function show(next) {
+    var out = lines[i];
+    out.className = 'is-leaving';
+    out.setAttribute('aria-hidden', 'true');
+    setTimeout(function () {
+      if (out.className === 'is-leaving') out.className = '';
+    }, SLIDE);
+
+    lines[next].className = 'is-current';
+    lines[next].removeAttribute('aria-hidden');
+    i = next;
+  }
+
+  function step() {
+    if (i + 1 >= lines.length) { stop(); return; }
+    show(i + 1);
+  }
+
+  function start() {
+    if (!timer && i + 1 < lines.length) timer = setInterval(step, HOLD);
+  }
+
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  // Pause while the reader is looking at or tabbing through the hero.
+  h.addEventListener('mouseenter', stop);
+  h.addEventListener('mouseleave', start);
+  h.addEventListener('focusin', stop);
+  h.addEventListener('focusout', start);
+
+  start();
+})();
+</script>

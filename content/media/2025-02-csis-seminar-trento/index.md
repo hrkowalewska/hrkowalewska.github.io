@@ -1,62 +1,30 @@
 ---
-# Documentation: https://sourcethemes.com/academic/docs/managing-content/
-
 title: "Presentation to the Centre for Social Inequality Studies Sociology Seminar Series"
-authors: ["helen"]
 date: 2025-02-18T00:00:00+01:00
-doi: ""
-
-# Schedule page publish date (NOT publication's date).
-publishDate: 2025-02-18T00:00:00+01:00
-
-# Publication type.
-# Legend: 0 = Uncategorized; 1 = Conference paper; 2 = Journal article;
-# 3 = Preprint / Working Paper; 4 = Report; 5 = Book; 6 = Book section;
-# 7 = Thesis; 8 = Patent
-publication_types: []
-
-# Publication name and optional abbreviated publication name.
-publication: "University of Trento, Italy, February 2025"
-publication_short: ""
-
-abstract: ""
-
-# Summary. An optional shortened abstract.
+medium: talk
+link: "https://r.unitn.it/en/soc/csis"
 summary: "[r.unitn.it](https://r.unitn.it/en/soc/csis), February 2025: Presentation to the Centre for Social Inequality Studies Sociology Seminar Series, University of Trento, Italy."
+abstract: |-
+  One in two adult women across Europe is aged 50 and over. Despite more of these ‘older’ women
+  seeking, wanting, or needing employment, little is known about women’s job loss and job-seeking
+  experiences at this life stage. How do women aged 50+ experience and narrate labour market
+  re-entry? Drawing on in-depth qualitative interviews with thirty-six women in England in their
+  50s and 60s transitioning from ‘inactivity’ or unemployment back into paid work, this study
+  explores the institutional, structural, and personal barriers they face.
 
-tags: []
-categories: []
-featured: false
+  Key findings reveal participants often feel overlooked and undervalued by employers, confronting
+  convoluted application processes, preferences for recent experience over transferable skills,
+  and stereotypes that they are less ‘malleable’ than younger workers. Interactions with Job
+  Centre services are frequently negative. Furthermore, many grapple with anxieties around health,
+  cognitive decline, technological know-how, and career gaps – and yet those with more experience
+  report this is sometimes seen as a ‘threat’ rather than an asset. Unpaid caregiving, community
+  work, and heavy domestic loads further undermine job-search strategies.
 
-# Custom links (optional).
-#   Uncomment and edit lines below to show custom links.
-# links:
-# - name: Follow
-#   url: https://twitter.com
-#   icon_pack: fab
-#   icon: twitter
-
-url_source: "https://r.unitn.it/en/soc/csis"
-
-# Featured image
-# To use, add an image named `featured.jpg/png` to your page's folder. 
-# Focal points: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight.
-image:
-  caption: ""
-  focal_point: ""
-  preview_only: false
-
-# Associated Projects (optional).
-#   Associate this publication with one or more of your projects.
-#   Simply enter your project's folder or file name without extension.
-#   E.g. `internal-project` references `content/project/internal-project/index.md`.
-#   Otherwise, set `projects: []`.
-projects: []
-
-# Slides (optional).
-#   Associate this publication with Markdown slides.
-#   Simply enter your slide deck's filename without extension.
-#   E.g. `slides: "example"` references `content/slides/example/index.md`.
-#   Otherwise, set `slides: ""`.
-slides: ""
+  These factors leave many older women feeling marginalised in the labour market and undervalued
+  by employers – as well as their families – despite their considerable skills and unrealised
+  potential. Findings highlight the need for targeted policy responses, including better access to
+  training, career coaching, tailored job search support, more flexible working arrangements, and
+  improved coordination across employment, health, and housing services. Altogether, the study
+  advances understanding of how gendered ageism, cumulative disadvantage, and life course dynamics
+  combine to shape older women’s labour market re-entry.
 ---

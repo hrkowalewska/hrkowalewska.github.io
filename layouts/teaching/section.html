@@ -1,0 +1,19 @@
+{{ define "main" }}
+{{- /* The teaching list lives in data/, not in content, so this section has no
+       child pages and needs its own template rather than the generic listing.
+       Awards are a separate section; see layouts/awards/. */ -}}
+<section class="page-head">
+  <div class="wrap">
+    <p class="label">{{ len hugo.Data.teaching }} units</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    {{ partial "list-filter.html" (dict "count" (len hugo.Data.teaching) "noun" "units") }}
+    {{ partial "stack.html" hugo.Data.teaching }}
+  </div>
+</section>
+{{ end }}

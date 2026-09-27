@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="{{ site.Language.Lang }}">
+{{ partial "head.html" . }}
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+{{ partial "masthead.html" . }}
+{{ partial "search.html" . }}
+
+{{- /* The accent belongs to the section, so it is set once here rather than on
+       each block. Only --accent and --accent-hair change, and the masthead and
+       footer read neither, so this stays inside the page body. The home page
+       has no section and so no class, leaving its blocks to alternate.
+
+       The attribute is built first and then interpolated once, never wrapped
+       in a conditional. A branch that may or may not emit an attribute sits in
+       attribute name position, and Go's contextual autoescaper replaces the
+       whole thing with ZgotmplZ rather than reason about it. Marking the value
+       safe inside the branch does not help, because it is the branch that is
+       refused. extlink.html is unconditional for the same reason. */ -}}
+{{- $accent := partial "accent.html" .Section -}}
+{{- $accent = cond (eq $accent "") "" (printf " class=%q" $accent) -}}
+<main id="main"{{ $accent | safeHTMLAttr }}>
+  {{ block "main" . }}{{ end }}
+</main>
+
+{{ partial "footer.html" . }}
+
+{{ partial "theme-toggle-js.html" . }}
+{{ partial "nav-drawer-js.html" . }}
+{{ partial "search-js.html" . }}
+{{ partial "hero-rotate-js.html" . }}
+
+</body>
+</html>

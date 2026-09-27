@@ -1,0 +1,138 @@
+{{ define "main" }}
+{{- $helen := site.GetPage "/authors/helen" -}}
+{{- $pubs := where site.RegularPages "Section" "publication" -}}
+{{- $media := where site.RegularPages "Section" "media" -}}
+{{- $projects := where site.RegularPages "Section" "project" -}}
+
+<section class="hero">
+  <div class="wrap">
+    {{- /* Named so the stack below 52rem can reorder these three. There the
+           portrait, her name and the labels group as one centred block and the
+           question follows, because stacked in markup order the labels land
+           under the photograph and read as its caption. */}}
+    <div class="hero-intro">
+      <p class="hero-eyebrow">
+        <span class="label">{{ site.Params.field }}</span>
+        <span class="label">{{ site.Params.institution }}</span>
+      </p>
+      {{- /* Every question renders, stacked in a single grid cell, so the hero
+             reserves the height of the tallest and the cycle shifts nothing.
+             Only the current one is opaque; the rest are hidden from assistive
+             technology so the heading has exactly one accessible name.
+             Without JavaScript the first simply stays put. */ -}}
+      <h1 class="hero-statement" id="hero-statement">
+        {{- range $i, $q := hugo.Data.statements }}
+        <span{{ if eq $i 0 }} class="is-current"{{ else }} aria-hidden="true"{{ end }}>{{ $q | markdownify }}</span>
+        {{- end }}
+      </h1>
+      <p class="hero-meta">
+        <strong>{{ with $helen.Params.honorific }}{{ . }} {{ end }}{{ $helen.Title }}</strong>
+        {{- /* Her title is self-contained; appending the department would read
+               "...Sociology and Social Policy, Department of Social and Policy
+               Sciences". The department is named and linked in the footer. */}}
+        {{- /* Her title names the university at every width, the way the About
+               page writes the same line. Below 52rem the eyebrow above is
+               hidden and this is the only mention of it in the hero; above,
+               the eyebrow repeats it, which is deliberate. */}}
+        <span>{{ $helen.Params.role }}, {{ site.Params.institution }}</span>
+        {{- with site.Params.editorship }}<span>{{ . | markdownify }}</span>{{ end }}
+      </p>
+    </div>
+    {{- with resources.Get site.Params.portrait }}
+    {{- $hero := .Process "resize 1120x webp q82" }}
+    <figure class="hero-portrait">
+      <img src="{{ $hero.RelPermalink }}" width="{{ $hero.Width }}" height="{{ $hero.Height }}"
+           alt="{{ $helen.Title }}, {{ $helen.Params.role }} at the {{ site.Params.institution }}">
+    </figure>
+    {{- end }}
+  </div>
+</section>
+
+{{- /* Each block names its section rather than carrying the class, so the
+       homepage and the page it links to cannot disagree about the colour. For
+       three of them the anchor id and the section name differ. */}}
+<section class="section{{ with partial "accent.html" "publication" }} {{ . }}{{ end }}" id="research">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Recent research</h2>
+      <a class="more" href="{{ "/publication/" | relURL }}">All {{ len $pubs }} publications &rarr;</a>
+    </div>
+    <div class="ledger">
+      {{- range first 4 (sort $pubs "Date" "desc") }}
+      {{ partial "entry.html" . }}
+      {{- end }}
+    </div>
+  </div>
+</section>
+
+<section class="section{{ with partial "accent.html" "project" }} {{ . }}{{ end }}" id="projects">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Funded projects</h2>
+      <a class="more" href="{{ "/project/" | relURL }}">All {{ len $projects }} projects &rarr;</a>
+    </div>
+    <div class="grid-projects">
+      {{- range first 2 (sort $projects "Date" "desc") }}
+      <article class="project">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        <p>{{ .Params.summary | plainify | truncate 260 }}</p>
+      </article>
+      {{- end }}
+    </div>
+  </div>
+</section>
+
+<section class="section{{ with partial "accent.html" "media" }} {{ . }}{{ end }}" id="public">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>In public</h2>
+      <a class="more" href="{{ "/media/" | relURL }}">All {{ len $media }} items &rarr;</a>
+    </div>
+    <div class="ledger">
+      {{- range first 5 (sort $media "Date" "desc") }}
+      {{ partial "entry.html" . }}
+      {{- end }}
+    </div>
+  </div>
+</section>
+
+<section class="section{{ with partial "accent.html" "teaching" }} {{ . }}{{ end }}" id="teaching">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Teaching</h2>
+      <a class="more" href="{{ "/teaching/" | relURL }}">All {{ len hugo.Data.teaching }} units &rarr;</a>
+    </div>
+    {{ partial "stack.html" (first 4 hugo.Data.teaching) }}
+  </div>
+</section>
+
+<section class="section{{ with partial "accent.html" "awards" }} {{ . }}{{ end }}" id="awards">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Grants and awards</h2>
+      <a class="more" href="{{ "/awards/" | relURL }}">All {{ len hugo.Data.grants }} entries &rarr;</a>
+    </div>
+    {{ partial "stack.html" (first 4 hugo.Data.grants) }}
+  </div>
+</section>
+
+<section class="section{{ with partial "accent.html" "authors" }} {{ . }}{{ end }}" id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>About</h2>
+      <a class="more" href="{{ $helen.RelPermalink }}">More about Helen &rarr;</a>
+    </div>
+    <div class="about-grid">
+      {{- with resources.Get site.Params.portrait }}
+      {{- $sq := .Process "fill 720x720 webp q82 smart" }}
+      <figure class="about-portrait">
+        <img src="{{ $sq.RelPermalink }}" width="{{ $sq.Width }}" height="{{ $sq.Height }}" alt="" loading="lazy">
+      </figure>
+      {{- end }}
+      <div class="prose">
+        {{ $helen.Summary }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}

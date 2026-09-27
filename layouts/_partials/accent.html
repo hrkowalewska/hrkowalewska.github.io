@@ -1,0 +1,19 @@
+{{- /*
+  Which of the two accents a section uses. Takes a section name, returns
+  "accent-alt" or nothing.
+
+  The accents are decoration and carry no meaning, but a section keeps the same
+  one everywhere it appears, so an ochre block on the homepage does not land on
+  a teal page when you click it. That is why this is a list read by both ends
+  rather than a class written into the homepage markup. The two used to
+  disagree because only the homepage had an opinion.
+
+  The homepage runs publication, project, media, teaching, awards and authors
+  in that order, so this list is also what makes it alternate. Reorder the
+  homepage and this has to follow, or the rhythm goes.
+
+  Sections with no homepage block are not listed and so are teal. Nothing shows
+  them beside anything else, so there is no rhythm to keep.
+*/ -}}
+{{- $alt := slice "project" "teaching" "authors" -}}
+{{- return cond (in $alt .) "accent-alt" "" -}}

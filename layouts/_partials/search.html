@@ -1,0 +1,20 @@
+{{- /*
+  The search dialog. A <dialog> rather than the drawer's hand-built overlay,
+  because showModal() gives focus containment, Escape and a top-layer backdrop
+  for free, and the top layer sidesteps the stacking fight the drawer had with
+  the masthead. The drawer could not use it, needing to work without
+  JavaScript; search has no such obligation, since its buttons are added by the
+  script and never appear otherwise.
+*/ -}}
+<dialog class="search" id="search" aria-label="Search this site">
+  <div class="search-bar">
+    <input class="search-input" id="search-input" type="search" autocomplete="off"
+           spellcheck="false" placeholder="Search publications, media, talks&hellip;"
+           aria-label="Search this site" aria-controls="search-results">
+    <button class="search-close" type="button" data-search-close aria-label="Close search">Close</button>
+  </div>
+  {{- /* Announced rather than only drawn, so the result count reaches a screen
+         reader as it changes. */}}
+  <p class="search-count" id="search-count" role="status" aria-live="polite"></p>
+  <ul class="search-results" id="search-results"></ul>
+</dialog>

@@ -1,0 +1,80 @@
+<script>
+// The nav becomes a drawer below 57rem, which is the narrowest the bar fits
+// on one row once it also carries a search trigger.
+//
+// Progressive enhancement, in the same shape as the theme control. The markup
+// holds one <nav> and a button that is hidden until this script adds
+// .has-drawer, so with JavaScript off the class never lands, the button never
+// appears, and the nav keeps the wrapping row it has always had. Navigation is
+// never the thing that breaks.
+//
+// Focus is contained by marking the page outside the header inert rather than
+// by writing a focus trap. Fewer moving parts, and it cannot fall out of step
+// with the markup. What stays reachable is the site name, the theme control,
+// this button and the links themselves.
+//
+// The closed panel is marked inert too, which is what keeps it out of the tab
+// order while it waits off-screen. Doing that in CSS with visibility: hidden
+// looks tidier and does not work, because a transitioned visibility holds its
+// computed value until the transition ends and nothing hidden can take focus.
+(function () {
+  var head = document.querySelector('.masthead');
+  var nav = document.getElementById('site-nav');
+  var btn = document.getElementById('nav-toggle');
+  if (!head || !nav || !btn) return;
+
+  head.classList.add('has-drawer');
+
+  // Marked inert while the drawer is open. The header is deliberately absent.
+  var behind = [document.getElementById('main'), document.querySelector('.site-footer')];
+  var open = false;
+
+  // Out of the tab order while closed, but only in drawer mode. Wider than the
+  // breakpoint this is the ordinary nav row and must stay reachable.
+  var wide = window.matchMedia('(min-width: 57.0625rem)');
+
+  function syncInert() { nav.inert = !wide.matches && !open; }
+
+  function set(next, restoreFocus) {
+    open = next;
+    head.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Menu');
+    // On <html> rather than <body>, so iOS honours it.
+    document.documentElement.classList.toggle('nav-open', open);
+    behind.forEach(function (el) { if (el) el.inert = open; });
+    syncInert();
+
+    if (open) {
+      var first = nav.querySelector('a');
+      if (first) first.focus();
+    } else if (restoreFocus) {
+      btn.focus();
+    }
+  }
+
+  btn.addEventListener('click', function () { set(!open, true); });
+
+  var backdrop = document.getElementById('nav-backdrop');
+  if (backdrop) backdrop.addEventListener('click', function () { set(false, true); });
+
+  // A link closes it on the way out. Same-page anchors would otherwise leave
+  // the drawer sitting over whatever they scrolled to.
+  nav.addEventListener('click', function (e) {
+    if (e.target.closest('a')) set(false, false);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (open && (e.key === 'Escape' || e.key === 'Esc')) set(false, true);
+  });
+
+  // Rotating the phone, or a desktop window crossing the breakpoint, hides the
+  // button. Leaving the drawer open would strand both the inert page and the
+  // scroll lock with nothing on screen to undo them.
+  var onChange = function (e) { if (e.matches && open) set(false, false); else syncInert(); };
+  if (wide.addEventListener) wide.addEventListener('change', onChange);
+  else if (wide.addListener) wide.addListener(onChange);
+
+  syncInert();
+})();
+</script>

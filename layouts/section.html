@@ -1,0 +1,29 @@
+{{ define "main" }}
+<section class="page-head">
+  <div class="wrap">
+    {{- with .Pages }}
+    <p class="label">{{ len . }} items &middot; {{ (index (sort . "Date") 0).Date.Year }}&ndash;{{ (index (sort . "Date" "desc") 0).Date.Year }}</p>
+    {{- end }}
+    <h1>{{ .Title }}</h1>
+    {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+  </div>
+</section>
+
+{{- with .Pages }}
+<section class="section">
+  <div class="wrap">
+    {{ partial "list-filter.html" (dict "count" (len .) "noun" "items") }}
+    {{- range .GroupByDate "2006" }}
+    <div class="year-group">
+      <h2 class="year-heading">{{ .Key }}</h2>
+      <div class="ledger">
+        {{- range .Pages }}
+        {{ partial "entry.html" . }}
+        {{- end }}
+      </div>
+    </div>
+    {{- end }}
+  </div>
+</section>
+{{- end }}
+{{ end }}

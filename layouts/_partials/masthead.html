@@ -1,0 +1,46 @@
+<header class="masthead">
+  <div class="wrap">
+    <a class="masthead-name" href="{{ "/" | relURL }}">{{ site.Title }}</a>
+    <nav id="site-nav" aria-label="Sections">
+      {{- /* First in the panel, and hidden on wide screens where the masthead
+             carries its own. */}}
+      <button class="search-row" type="button" data-search-open hidden>Search</button>
+      {{- /* Menu entries are defined by URL in menus.toml, so they carry no
+             .Page and neither .IsDescendant nor .IsMenuCurrent matches. Compare
+             the paths directly: exact match for the section page itself, prefix
+             match so its children stay marked too. Every menu URL ends in a
+             slash, which stops /talk/ matching something like /talks-other/. */ -}}
+      {{- $here := .RelPermalink -}}
+      {{- range site.Menus.main -}}
+        {{- $url := .URL | relURL -}}
+        {{- $current := or (eq $here $url) (and (ne $url "/") (hasPrefix $here $url)) }}
+      <a href="{{ $url }}"{{ if $current }} aria-current="page"{{ end }}>{{ .Name }}</a>
+      {{- end }}
+    </nav>
+    {{- /* Three states, so aria-pressed is wrong: it is binary. The label names
+           the current setting and the tooltip spells it out. Auto is the
+           server-rendered default because it is what anyone without a stored
+           choice is already getting. */ -}}
+    {{- /* Hidden until search-js.html marks the masthead, like the drawer
+           button. Below 52rem there is no room for it here, the bar already
+           borrowing from its gutter at 320px, so the drawer carries one
+           instead. */ -}}
+    <button class="search-toggle" type="button" data-search-open hidden>Search</button>
+
+    <button class="theme-toggle" id="theme-toggle" type="button"
+            title="Theme: follow system settings"
+            aria-label="Theme: follow system settings">Auto</button>
+
+    {{- /* Hidden until nav-drawer-js.html marks the masthead, so with no
+           JavaScript there is no button that does nothing and the nav above
+           keeps the wrapping row it has always had. CSS puts this last in the
+           row rather than markup, so the tab order still follows the reading
+           order on wide screens. */ -}}
+    <button class="nav-toggle" id="nav-toggle" type="button"
+            aria-controls="site-nav" aria-expanded="false" aria-label="Menu">
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+    </button>
+  </div>
+  {{- /* Outside .wrap so it covers the page rather than sitting in the bar. */}}
+  <div class="nav-backdrop" id="nav-backdrop"></div>
+</header>

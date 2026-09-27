@@ -1,0 +1,103 @@
+{{- /*
+  The search index. One record per thing a reader might look for, which means
+  content pages and the three data files alike, since teaching, grants and
+  experience have no pages at all.
+
+  `url` is resolved here rather than in the script. An item whose own page is
+  worth visiting links to it, decided by the same showpage.html the listings and
+  head.html read. Everything else links to its listing pre-filtered to that one
+  row, because the row is where the item actually lives. Working it out here
+  means the rule exists once instead of being restated in JavaScript.
+
+  `text` is what gets matched. It is deliberately not the rendered page: these
+  pages are near-empty, and the listing row holds everything worth searching.
+*/ -}}
+{{- $items := slice -}}
+
+{{- /* The name of the place a result sends you, taken from the nav rather than
+       from the section page's title, because that is the label the reader will
+       have seen and because two of them differ: "Funded projects" is "Projects"
+       in the nav and "Grants and awards" is "Awards", and the long forms wrap
+       in a column sized for a four-digit year. Anything not in the nav falls
+       back to its section title. */ -}}
+{{- $group := dict -}}
+{{- range site.Menus.main -}}
+  {{- $group = merge $group (dict (.URL | relURL) .Name) -}}
+{{- end -}}
+{{- $groupFor := dict -}}
+{{- range $s := slice "publication" "media" "talk" "project" "take-part" "teaching" "awards" "authors/helen" -}}
+  {{- $path := printf "/%s/" $s | relURL -}}
+  {{- $name := index $group $path -}}
+  {{- if not $name -}}
+    {{- with site.GetPage (printf "/%s" $s) }}{{ $name = .Title }}{{ end -}}
+  {{- end -}}
+  {{- $groupFor = merge $groupFor (dict $s ($name | default $s)) -}}
+{{- end -}}
+
+{{- $labels := dict
+      "publication" (dict
+        "article" "Journal article" "working-paper" "Working paper"
+        "report" "Report" "thesis" "Thesis" "chapter" "Book section"
+        "book" "Book" "conference-paper" "Conference paper")
+      "media" (dict
+        "press" "Press" "writing" "Writing" "broadcast" "Broadcast"
+        "evidence" "Evidence" "talk" "Talk") -}}
+
+{{- range where site.RegularPages "Section" "in" (slice "publication" "media" "talk" "project" "take-part") -}}
+  {{- $kind := "" -}}
+  {{- if eq .Section "publication" -}}
+    {{- $kind = index $labels "publication" (.Params.pubtype | default "other") | default "Other" -}}
+  {{- else if eq .Section "media" -}}
+    {{- $kind = index $labels "media" (.Params.medium | default "press") | default "Press" -}}
+  {{- else if eq .Section "talk" -}}
+    {{- $kind = "Talk" -}}
+  {{- end -}}
+
+  {{- $url := printf "%s?q=%s" (printf "/%s/" .Section | relURL) (.Title | urlquery) -}}
+  {{- if partial "showpage.html" . }}{{ $url = .RelPermalink }}{{ end -}}
+
+  {{- $text := slice .Title $kind -}}
+  {{- with .Params.venue }}{{ $text = $text | append . }}{{ end -}}
+  {{- with .Params.event }}{{ $text = $text | append . }}{{ end -}}
+  {{- with .Params.location }}{{ $text = $text | append . }}{{ end -}}
+  {{- with .Params.summary }}{{ $text = $text | append (. | plainify) }}{{ end -}}
+  {{- with .Params.abstract }}{{ $text = $text | append (. | plainify) }}{{ end -}}
+
+  {{- $items = $items | append (dict
+        "title" .Title
+        "group" (index $groupFor .Section)
+        "kind" $kind
+        "where" (or .Params.venue .Params.event "")
+        "year" .Date.Year
+        "section" .Section
+        "url" $url
+        "text" (delimit $text " ")) -}}
+{{- end -}}
+
+{{- /* The data-driven lists. These have no page of their own, so they always
+       land on their listing. `page` on an entry is a link to somewhere else,
+       not to itself, so it is not a destination for search. */ -}}
+{{- range $file := slice "teaching" "grants" "experience" -}}
+  {{- $sec := cond (eq $file "grants") "awards" (cond (eq $file "experience") "authors/helen" $file) -}}
+  {{- range (index hugo.Data $file) -}}
+    {{- $text := slice .title .org -}}
+    {{- with .kind }}{{ $text = $text | append . }}{{ end -}}
+    {{- with .note }}{{ $text = $text | append (. | plainify) }}{{ end -}}
+    {{- /* Experience lives on the About page, which is a profile rather than a
+           listing and carries no filter, so ?q= there would be a promise the
+           page cannot keep. It gets an anchor instead. */ -}}
+    {{- $url := printf "%s?q=%s" (printf "/%s/" $sec | relURL) (.title | urlquery) -}}
+    {{- if eq $file "experience" }}{{ $url = printf "%s#experience" (printf "/%s/" $sec | relURL) }}{{ end -}}
+    {{- $items = $items | append (dict
+          "title" .title
+          "group" (index $groupFor $sec)
+          "kind" (.kind | default "")
+          "where" (.org | default "")
+          "year" (int (substr .date 0 4))
+          "section" $file
+          "url" $url
+          "text" (delimit $text " ")) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- dict "items" $items | jsonify (dict "indent" "") -}}

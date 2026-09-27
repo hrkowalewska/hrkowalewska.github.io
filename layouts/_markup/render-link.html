@@ -1,0 +1,11 @@
+{{- /* Link render hook: external links from Markdown open in a new tab.
+       Replaces the old theme's [blackfriday] hrefTargetBlank setting, which
+       Hugo removed along with Blackfriday itself. */ -}}
+<a href="{{ .Destination | safeURL }}"
+  {{- with .Title }} title="{{ . }}"{{ end }}
+  {{- partial "extlink.html" .Destination | safeHTMLAttr -}}
+>{{ .Text }}</a>
+{{- /* This trim matters. A render hook emits its template verbatim, so the
+       newline after </a> would become a space in the rendered text, putting a
+       gap before any punctuation that follows a link and letting a full stop
+       wrap onto its own line. */ -}}

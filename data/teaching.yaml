@@ -1,0 +1,57 @@
+# Teaching, most recent first. Rendered by _partials/stack.html as ledger rows,
+# the same markup the publications and media lists use.
+#
+# `kind` is the role, and it fills the small label under the year in the rail.
+# It is the reason the titles are bare unit names: "Lecturer for 'Population
+# Processes'" would say the role twice. Keep it to two words, because the rail
+# is only as wide as a four-digit year.
+#
+# `note` may contain Markdown and renders as its own paragraph. A `link` with a
+# `link_label` renders as a chip, which is where the unit handbook lives. A
+# `page` would make the title itself click through, and nothing here has a page
+# to click through to yet.
+- title: "Sociology of the Family and Family Policy"
+  kind: "Unit convenor"
+  org: "University of Bath"
+  # Convened since 2025 and still running. Only the year is read, and the empty
+  # `end` is what adds the trailing dash.
+  date: "2025-10-03"
+  end: ""
+  note: "Second/third-year module for BSc degrees."
+  link: "/teaching/sociology-of-the-family-and-family-policy-unit-handbook.pdf"
+  link_label: "Handbook"
+- title: "Population Processes in the Developed World"
+  kind: "Lecturer"
+  org: "University of Southampton"
+  date: "2019-01-01"
+  note: "Second-year module for BSc degrees in geography and population studies. Designed and delivered four lectures and one seminar on gender, fertility, and employment."
+- title: "Human Rights, Wellbeing and Politics"
+  kind: "Lecturer"
+  org: "University of Southampton"
+  date: "2019-01-01"
+  note: "First-year module for various BSc degrees in sociology, social policy, and criminology. Designed and delivered three lectures on new social risks and gender and welfare states."
+- title: "Project/Dissertation"
+  kind: "Teaching assistant"
+  org: "University of Southampton"
+  date: "2019-01-01"
+  note: "Marked and gave feedback on two final-year undergraduate dissertations in Population and Geography."
+- title: "Research Communication Skills"
+  kind: "Teaching assistant"
+  org: "University of Southampton"
+  date: "2018-01-01"
+  note: "Module for various MSc degrees in social sciences. Marked and gave feedback on student essays."
+- title: "Introduction to Quantitative Methods"
+  kind: "Teaching assistant"
+  org: "University of Southampton"
+  date: "2017-01-01"
+  note: "First-year module for various BSc degrees in social sciences. Delivered computer workshops and tutorials on statistical methods."
+- title: "Comparing Welfare States"
+  kind: "Guest lecturer"
+  org: "University of Southampton"
+  date: "2016-01-01"
+  note: "Third-year module for BSc Sociology and Social Policy. Designed and delivered a lecture on gender and the welfare state."
+- title: "Social Problems and Social Policy"
+  kind: "Demonstrator"
+  org: "University of Southampton"
+  date: "2014-01-01"
+  note: "First-year module for various BSc degrees in sociology, social policy, and criminology. Designed and delivered seminars and gave feedback on presentations, essays, and exam scripts."

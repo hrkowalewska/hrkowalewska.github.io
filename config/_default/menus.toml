@@ -1,43 +1,48 @@
-# Navigation Links
-#   To link a homepage widget, specify the URL as a hash `#` followed by the filename of the
-#     desired widget in your `content/home/` folder.
-#   The weight parameter defines the order that the links will appear in.
-
-#[[main]]
-# name = "Home"
-#  url = "#about"
-#  weight = 10
-
-# News section retired. Uncomment this and the `content/post/` entry in
-# `config.toml`'s `ignoreFiles` to bring it back.
-#[[main]]
-#  name = "News"
-#  url = "/post/"
-#  weight = 20
-
-[[main]]
-  name = "Projects"
-  url = "#projects"
-  weight = 30
+# Real section pages, not homepage anchors. The old menu pointed "Publications"
+# at #featured, which showed only pages with `featured: true` — exactly one.
+#
+# Every homepage section has a destination here, so nothing on the site is
+# reachable only by scrolling.
 
 [[main]]
   name = "Publications"
-  url = "#featured"
+  url = "/publication/"
+  weight = 10
+
+[[main]]
+  name = "In public"
+  url = "/media/"
+  weight = 20
+
+[[main]]
+  name = "Talks"
+  url = "/talk/"
+  weight = 30
+
+[[main]]
+  name = "Projects"
+  url = "/project/"
   weight = 40
 
 [[main]]
-  name = "Outreach & Other"
-  url = "#media"
+  name = "Teaching"
+  url = "/teaching/"
+  weight = 50
+
+# Shorter than the page's own title, "Grants and awards", to keep the bar from
+# getting unwieldy. Hugo lets the two differ.
+[[main]]
+  name = "Awards"
+  url = "/awards/"
+  weight = 55
+
+[[main]]
+  name = "About"
+  url = "/authors/helen/"
   weight = 60
 
-#[[main]]
-#  name = "Contact"
-#  url = "#contact"
-#  weight = 60
-
-# Link to a PDF of your resume/CV from the menu.
-# To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.
+# The News section is retired; see ignoreFiles in config.toml.
 # [[main]]
-#    name = "CV"
-#    url = "files/cv.pdf"
-#    weight = 70
+#   name = "News"
+#   url = "/post/"
+#   weight = 70

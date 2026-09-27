@@ -1,0 +1,875 @@
+/* ==========================================================================
+   helenkowalewska.uk
+   Hand-written CSS. No framework, no preprocessor, no build step beyond Hugo.
+
+   The year rail is the one structural device that encodes something true: the
+   work is a typed chronology.
+
+   The two accents are decoration, not meaning. A section keeps the same one
+   everywhere it appears, and the homepage runs its sections in an order that
+   alternates, so the page has a rhythm and a click-through never changes
+   colour. Which section gets which lives in _partials/accent.html, not here.
+   An earlier version tried to make teal mean "scholarly" and ochre mean
+   "public engagement", but with five homepage sections of which three are
+   neither, it only ever read as a stray colour.
+
+   Teal and ochre, explicitly NOT pink and blue: the research is about gender,
+   so reproducing that convention would undercut it. The pair also tested
+   strongest of four candidates for colour-vision separation (42.0 protan,
+   44.6 deutan, 58.8 tritan).
+   ========================================================================== */
+
+@font-face {
+  font-family: "Archivo";
+  src: url("{{ .fonts.archivo }}") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("{{ .fonts.sourceserif }}") format("woff2");
+  font-weight: 400 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("{{ .fonts.plexmono }}") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* --- tokens --------------------------------------------------------------
+   Light is defined on bare :root so no colour is ever left undefined.
+   Dark redefines only what changes, in both the media query and the explicit
+   [data-theme] form, so the toggle wins in either direction.                 */
+
+:root {
+  --paper:      oklch(0.985 0.004 250);
+  --paper-sunk: oklch(0.935 0.008 250);
+  --ink:        oklch(0.24  0.025 260);
+  --ink-soft:   oklch(0.47  0.02  260);
+  --ink-faint:  oklch(0.52  0.015 260);
+  --rule:       oklch(0.885 0.008 260);
+  --rule-strong:oklch(0.78  0.012 260);
+
+  /* The two accents, and the one components actually read. .accent-alt flips
+     `--accent`, and baseof.html puts it on <main> so a whole page inherits its
+     section's accent. Nothing below needs to know which it got. */
+  --accent-1:     oklch(0.47 0.09 195);
+  --accent-1-dim: oklch(0.47 0.09 195 / 0.14);
+  --accent-2:     oklch(0.52 0.12 75);
+  --accent-2-dim: oklch(0.52 0.12 75 / 0.14);
+
+  --focus: oklch(0.55 0.19 265);
+
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-body:    "Source Serif 4", ui-serif, Georgia, serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Square images, 2px on controls. Decided, not defaulted: the system is
+     hairlines, 1px grid gaps and square ledger rows, so a soft radius on the
+     photographs would be the only soft thing in a hard system. */
+  --radius-img: 0px;
+  --radius-ctl: 2px;
+
+  --measure: 62ch;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  /* The floor fits the widest rail label, not the year. "DEMONSTRATOR" needs
+     5.1rem at the label's size and a 3.5rem floor left it spilling 26px onto
+     the title everywhere from 545px to about 910px. Below 545px the rail
+     collapses to a row and this is unused. */
+  --rail: clamp(5.25rem, 9vw, 6.5rem);
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      oklch(0.185 0.018 265);
+    --paper-sunk: oklch(0.155 0.016 265);
+    --ink:        oklch(0.945 0.008 265);
+    --ink-soft:   oklch(0.735 0.014 265);
+    --ink-faint:  oklch(0.605 0.016 265);
+    --rule:       oklch(0.315 0.018 265);
+    --rule-strong:oklch(0.42  0.02  265);
+    --accent-1:     oklch(0.76 0.09 195);
+    --accent-1-dim: oklch(0.76 0.09 195 / 0.18);
+    --accent-2:     oklch(0.80 0.11 80);
+    --accent-2-dim: oklch(0.80 0.11 80 / 0.18);
+    --focus: oklch(0.76 0.15 265);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      oklch(0.185 0.018 265);
+  --paper-sunk: oklch(0.155 0.016 265);
+  --ink:        oklch(0.945 0.008 265);
+  --ink-soft:   oklch(0.735 0.014 265);
+  --ink-faint:  oklch(0.605 0.016 265);
+  --rule:       oklch(0.315 0.018 265);
+  --rule-strong:oklch(0.42  0.02  265);
+  --accent-1:     oklch(0.76 0.09 195);
+  --accent-1-dim: oklch(0.76 0.09 195 / 0.18);
+  --accent-2:     oklch(0.80 0.11 80);
+  --accent-2-dim: oklch(0.80 0.11 80 / 0.18);
+  --focus: oklch(0.76 0.15 265);
+}
+
+
+/* Accent rotation. Sections alternate down the page purely for rhythm. */
+:root { --accent: var(--accent-1); --accent-hair: var(--accent-1-dim); }
+.accent-alt { --accent: var(--accent-2); --accent-hair: var(--accent-2-dim); }
+
+/* --- base ---------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.075rem);
+  line-height: 1.6;
+  font-synthesis-weight: none;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.017em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+a { color: inherit; text-decoration-color: var(--rule-strong); text-underline-offset: 0.2em; }
+
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* A component's own `display` outranks the UA rule for [hidden], which is how
+   the drawer's search row stayed visible with JavaScript off. Everything here
+   that is revealed by script is hidden in the markup, so this has to win. */
+[hidden] { display: none !important; }
+
+/* The masthead is sticky, so anything jumped to lands underneath it without
+   this. Scoped to whatever is actually targeted rather than every id. */
+:target { scroll-margin-top: 5.5rem; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--ink); color: var(--paper);
+  padding: 0.6rem 1rem; z-index: 10; font-family: var(--font-display);
+}
+.skip:focus { left: 0; }
+
+.wrap { width: min(100% - (var(--gutter) * 2), 74rem); margin-inline: auto; }
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 400;
+}
+
+/* --- masthead ------------------------------------------------------------ */
+
+.masthead {
+  border-bottom: 1px solid var(--rule);
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in oklab, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px);
+}
+.masthead {
+  /* Shared with the drawer, which starts where the bar ends. */
+  --bar: 3.75rem;
+}
+.masthead > .wrap {
+  display: flex; align-items: center; gap: 1.5rem;
+  min-height: var(--bar); flex-wrap: wrap;
+}
+.masthead-name {
+  font-family: var(--font-display); font-weight: 600; font-size: 0.95rem;
+  letter-spacing: -0.01em; text-decoration: none; margin-right: auto;
+}
+.masthead nav { display: flex; gap: clamp(0.75rem, 2.5vw, 1.5rem); align-items: center; flex-wrap: wrap; }
+.masthead nav a {
+  font-family: var(--font-display); font-size: 0.875rem; font-weight: 500;
+  text-decoration: none; color: var(--ink-soft);
+  padding-block: 0.35rem; border-bottom: 2px solid transparent;
+}
+.masthead nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--ink); }
+
+.theme-toggle {
+  font: inherit; font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: none; border: 1px solid var(--rule); color: var(--ink-soft);
+  padding: 0.3rem 0.55rem; cursor: pointer; border-radius: var(--radius-ctl);
+  /* Auto, Light and Dark are different widths; reserve the widest so the nav
+     beside it does not shift each time the label changes. */
+  min-width: 4.25rem; text-align: center;
+}
+
+/* --- mobile nav drawer ---------------------------------------------------
+   Seven links wrapped onto two rows under the name and left a sticky 186px
+   header on every phone, 28% of an iPhone SE, held the whole way down an
+   57rem is the switch, because that is the narrowest the bar fits on one row
+   once it carries a search trigger as well, measured at 904px. It was 52rem
+   before search existed; adding a 64px button to a bar that was already nearly
+   full wrapped it to 90px everywhere from 833px to 903px.
+
+   Everything here is gated on .has-drawer, which nav-drawer-js.html adds at
+   load, so with no JavaScript the button stays hidden and the nav keeps the
+   wrapping row. The fallback is what the site did before, not a site with no
+   navigation.                                                               */
+
+.nav-toggle { display: none; }
+.nav-backdrop { display: none; }
+
+@media (max-width: 57rem) {
+  /* backdrop-filter makes an element the containing block for fixed-position
+     descendants, which would trap the panel inside the bar. The blur is a
+     wide-screen nicety, so drop it here and go opaque, which reads better over
+     a scrolling page on a small screen anyway. */
+  .has-drawer {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  /* Above the backdrop, so the bar stays lit and usable while the drawer is
+     open. This cannot be what lifts it above the panel as well: the nav is a
+     child of .wrap, so a z-index here makes a stacking context and the panel's
+     own z-index stacks inside it, over the buttons beside it. The panel is
+     kept clear of the bar geometrically instead, below. */
+  .has-drawer > .wrap { position: relative; z-index: 7; }
+
+  .has-drawer .nav-toggle {
+    display: grid; place-items: center;
+    order: 1;                       /* last in the row, without moving markup */
+    width: 44px; height: 44px; margin-right: -0.6rem;
+    background: none; border: 0; padding: 0;
+    color: var(--ink); cursor: pointer;
+  }
+  .nav-toggle-bars, .nav-toggle-bars::before, .nav-toggle-bars::after {
+    display: block; width: 18px; height: 2px; background: currentColor;
+    transition: transform 0.2s ease, background-color 0.2s ease, top 0.2s ease;
+  }
+  .nav-toggle-bars { position: relative; }
+  .nav-toggle-bars::before, .nav-toggle-bars::after { content: ""; position: absolute; left: 0; }
+  .nav-toggle-bars::before { top: -6px; }
+  .nav-toggle-bars::after { top: 6px; }
+  /* Open, the three bars fold into a cross. */
+  .is-open .nav-toggle-bars { background: transparent; }
+  .is-open .nav-toggle-bars::before { top: 0; transform: rotate(45deg); }
+  .is-open .nav-toggle-bars::after { top: 0; transform: rotate(-45deg); }
+
+  .has-drawer nav {
+    /* Starts where the bar's rule ends rather than sliding under it, so the
+       name, the theme control and the close button all stay visible and
+       tappable. The 1px is that rule, which belongs to the masthead. */
+    position: fixed; inset: calc(var(--bar) + 1px) 0 0 auto; z-index: 6;
+    width: min(80vw, 20rem);
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: var(--paper);
+    border-left: 1px solid var(--rule);
+    overflow-y: auto;
+    /* Off-screen only. Keeping the closed panel out of the tab order is the
+       script's job, through inert, rather than visibility: hidden here.
+       Transitioning visibility holds its computed value at hidden for the
+       length of the transition, and a hidden element cannot take focus, so the
+       script could not move focus into a panel already visible on screen. The
+       reduced-motion block made that worse rather than better by forcing every
+       duration to 0.01ms, which kept the trap and shrank it to something that
+       only failed sometimes. Being position: fixed, the panel adds nothing to
+       the document's scrollable width while it sits out there. */
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .has-drawer.is-open nav { transform: none; }
+
+  .has-drawer nav a {
+    display: flex; align-items: center; min-height: 48px;
+    padding: 0.7rem var(--gutter);
+    font-size: 1rem;
+    border-bottom: 1px solid var(--rule);
+    /* The row is the target now, so the underline marker becomes an edge. */
+    border-left: 3px solid transparent;
+  }
+  .has-drawer nav a[aria-current="page"] {
+    color: var(--ink); border-left-color: var(--accent); border-bottom-color: var(--rule);
+  }
+
+  .has-drawer .nav-backdrop {
+    /* Starts level with the panel, so the bar reads as part of the layer that
+       is still live rather than as dimmed chrome with usable buttons on it. */
+    display: block; position: fixed; inset: calc(var(--bar) + 1px) 0 0 0; z-index: 5;
+    /* Neutral, not --ink. In dark mode --ink is nearly white, so the scrim
+       lightened the page behind and left the dimmed content brighter than the
+       panel over it, which is the wrong way round. Darkening works in both. */
+    background: oklch(0 0 0 / 0.45);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.28s ease;
+  }
+  .has-drawer.is-open .nav-backdrop { opacity: 1; pointer-events: auto; }
+}
+
+/* Set by the script while the drawer is open. */
+.nav-open, .nav-open body { overflow: hidden; }
+
+/* --- search ---------------------------------------------------------------
+   A <dialog> in the top layer, so none of the drawer's stacking problems
+   apply. The triggers and the listing filter are hidden in the markup and
+   revealed by search-js.html, so without JavaScript nothing appears that does
+   nothing.                                                                   */
+
+.search-toggle {
+  font: inherit; font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: none; border: 1px solid var(--rule); color: var(--ink-soft);
+  padding: 0.3rem 0.55rem; cursor: pointer; border-radius: var(--radius-ctl);
+}
+
+.search-row {
+  font: inherit; font-family: var(--font-display); font-size: 1rem;
+  text-align: left; background: none; border: 0; cursor: pointer; color: var(--ink);
+  display: flex; align-items: center; min-height: 48px;
+  padding: 0.7rem var(--gutter);
+  border-bottom: 1px solid var(--rule); border-left: 3px solid transparent;
+}
+
+/* Which of the two triggers is shown. These follow both rules above rather
+   than sitting between them, since .search-row sets its own display and would
+   otherwise win on source order at every width. The bar carries the trigger
+   only where there is room: at 320px its contents already exceed the wrap. */
+@media (max-width: 57rem) { .search-toggle { display: none; } }
+@media (min-width: 57.0625rem) { .search-row { display: none; } }
+
+.search[open] {
+  display: flex; flex-direction: column;
+  width: min(100% - 2rem, 42rem);
+  max-height: min(80vh, 40rem);
+  margin: clamp(1rem, 8vh, 6rem) auto auto;
+  padding: 0; border: 1px solid var(--rule-strong); border-radius: var(--radius-ctl);
+  background: var(--paper); color: var(--ink);
+  box-shadow: 0 1rem 3rem oklch(0 0 0 / 0.18);
+}
+.search::backdrop { background: oklch(0 0 0 / 0.45); }
+
+.search-bar { display: flex; gap: 0.75rem; align-items: center; padding: 0.9rem 1rem; border-bottom: 1px solid var(--rule); }
+.search-input {
+  font: inherit; font-family: var(--font-display); font-size: 1.05rem;
+  flex: 1; min-width: 0; background: none; border: 0; color: var(--ink);
+}
+.search-input:focus { outline: none; }
+.search-input::-webkit-search-cancel-button { display: none; }
+.search-close {
+  font: inherit; font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: none; border: 1px solid var(--rule); color: var(--ink-soft);
+  padding: 0.3rem 0.55rem; cursor: pointer; border-radius: var(--radius-ctl);
+}
+.search-count {
+  margin: 0; padding: 0.5rem 1rem;
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint);
+}
+.search-results { list-style: none; margin: 0; padding: 0 0 0.5rem; overflow-y: auto; }
+.search-results a {
+  display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.15rem 1rem;
+  padding: 0.7rem 1rem; text-decoration: none;
+  border-top: 1px solid var(--rule);
+}
+.search-kind {
+  grid-row: span 2; align-self: start; padding-top: 0.15rem;
+  font-family: var(--font-mono); font-size: 0.625rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
+}
+.search-title { font-family: var(--font-display); font-weight: 600; line-height: 1.3; }
+.search-where { font-size: 0.875rem; color: var(--ink-soft); }
+.search-results a.is-active, .search-results a:focus-visible { background: var(--paper-sunk); outline: none; }
+
+/* Ranged right, above the table it filters. Wraps to a full-width field on a
+   narrow screen rather than squeezing into a corner. */
+.list-filter {
+  display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center;
+  gap: 0.5rem 0.75rem; margin-bottom: 1.25rem;
+}
+.list-filter-input {
+  font: inherit; font-family: var(--font-display); font-size: 0.95rem;
+  flex: 0 1 18rem; min-width: 0;
+  background: none; color: var(--ink); text-align: left;
+  border: 0; border-bottom: 1px solid var(--rule-strong);
+  padding: 0.4rem 0;
+}
+.list-filter-input:focus { outline: none; border-bottom-color: var(--accent); }
+.list-filter-clear {
+  font: inherit; font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  background: none; border: 1px solid var(--rule); color: var(--ink-soft);
+  padding: 0.22rem 0.5rem; cursor: pointer; border-radius: var(--radius-ctl);
+  white-space: nowrap;
+}
+.list-filter-input::-webkit-search-cancel-button { display: none; }
+.list-filter-count {
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint);
+  /* Ahead of the field rather than pushed to the far edge: it is the field's
+     own readout, so it belongs beside it. */
+  white-space: nowrap; order: -1;
+}
+.list-filter-empty { margin: 0 0 2rem; color: var(--ink-soft); }
+.list-filter-empty button {
+  font: inherit; background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--accent); text-decoration: underline; text-decoration-color: var(--accent-hair);
+}
+
+/* --- hero ----------------------------------------------------------------
+   The portrait is the only warm, photographic thing on an otherwise cool and
+   typographic page. It earns its place by signalling "a person, not a topic",
+   so it gets no frame, no radius and no effect. Nothing competes with it.
+   Its placement does the work instead, see portrait placement above.        */
+
+.hero {
+  /* One source of truth. The portrait is pulled down by exactly this amount to
+     land on the hero's bottom rule, so the two values cannot drift apart. */
+  --hero-pad-end: clamp(2.5rem, 6vw, 4rem);
+  padding-block: clamp(2.5rem, 7vw, 5.5rem) var(--hero-pad-end);
+  border-bottom: 1px solid var(--rule);
+}
+.hero > .wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: end;
+}
+.hero-eyebrow { display: flex; gap: 0.75rem; align-items: baseline; margin: 0 0 1.75rem; flex-wrap: wrap; }
+.hero-statement {
+  font-size: clamp(1.7rem, 1.05rem + 2.7vw, 3.15rem);
+  font-weight: 600; max-width: 20ch; letter-spacing: -0.025em;
+  /* Every question occupies the same cell, so the row takes the height of the
+     tallest and the rotation cannot move the hero's bottom rule, the anchored
+     portrait, or anything below them. */
+  display: grid;
+  /* Clip the slide on the x-axis only. `overflow: hidden` would force the
+     vertical axis to a scroll container and cut the descenders. */
+  overflow-x: clip;
+}
+.hero-statement > span {
+  grid-area: 1 / 1;
+  /* Waiting off to the right. Travel is in em so it scales with the clamped
+     font size rather than jumping about between breakpoints. */
+  opacity: 0;
+  transform: translateX(1.5em);
+  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* Moved off the h1: the spans are the block containers now. */
+  text-wrap: balance;
+}
+.hero-statement > span.is-current { opacity: 1; transform: none; }
+/* Alternates with the sections below, same rhythm. */
+.hero-statement > span:nth-child(even) em { color: var(--accent-2); }
+/* Leaving to the left. The script clears this once the slide finishes, so the
+   span returns to the right-hand waiting position. */
+.hero-statement > span.is-leaving { opacity: 0; transform: translateX(-1.5em); }
+/* The one moment of colour in the hero: the comparative claim itself. */
+.hero-statement em { font-style: normal; color: var(--accent); }
+.hero-meta {
+  margin: 2rem 0 0;
+  display: flex; flex-direction: column; gap: 0.3rem;
+  font-family: var(--font-display); font-size: 0.95rem; color: var(--ink-soft);
+}
+.hero-meta strong { color: var(--ink); font-weight: 600; font-size: 1.05rem; }
+
+/* Anchored: the portrait drops so its bottom edge meets the hero's bottom rule,
+   placed by the page's own structure rather than floating beside the type.
+   Chosen over a drop shadow after measuring the problem. The headshot's
+   vignetted edge is 6.52:1 against the light page, so edge definition was never
+   the issue there and a shadow would have solved nothing, while being the only
+   elevation on a page whose light source nothing else obeys.
+
+   That same edge is only 2.74:1 in dark mode. If the photo ever looks detached
+   there, the fix is a 1px --rule hairline, not a shadow. */
+.hero-portrait { margin: 0 0 calc(-1 * var(--hero-pad-end)); }
+.hero-portrait img { width: 100%; border-radius: var(--radius-img); display: block; }
+.hero-portrait figcaption {
+  margin-top: 0.6rem;
+  font-family: var(--font-mono); font-size: 0.625rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint);
+}
+
+/* --- section scaffolding ------------------------------------------------- */
+
+.section { padding-block: clamp(2.75rem, 6vw, 4.5rem); border-bottom: 1px solid var(--rule); }
+.section:last-of-type { border-bottom: 0; }
+
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 1rem 2rem; flex-wrap: wrap; margin-bottom: 2rem;
+}
+.section-head h2 { font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.75rem); position: relative; padding-top: 0.85rem; }
+.section-head h2::before {
+  content: ""; position: absolute; top: 0; left: 0;
+  width: 2.5rem; height: 3px; background: var(--accent);
+}
+.section-head .label { white-space: nowrap; }
+.section-head a.more { font-family: var(--font-display); font-size: 0.875rem; font-weight: 500; color: var(--ink-soft); }
+
+/* --- the year rail ledger ------------------------------------------------
+   Every dated list on the site, whether its rows come from pages via
+   _partials/entry.html or from data/ via _partials/stack.html. Teaching,
+   awards and experience had a second, quieter treatment of their own until it
+   was deleted in favour of these rules.                                      */
+
+.ledger { border-top: 1px solid var(--rule); }
+
+.entry {
+  display: grid;
+  grid-template-columns: var(--rail) 1fr;
+  gap: 0 clamp(1rem, 3vw, 2.25rem);
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+.entry-rail { grid-column: 1; }
+.entry-year {
+  font-family: var(--font-mono);
+  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1; color: var(--accent); letter-spacing: -0.02em;
+}
+.entry-kind {
+  display: block; margin-top: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.625rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-faint); line-height: 1.35;
+}
+
+.entry-body { grid-column: 2; min-width: 0; }
+.entry-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.02rem, 0.98rem + 0.25vw, 1.2rem);
+  font-weight: 600; line-height: 1.3; letter-spacing: -0.012em;
+  margin: 0; text-wrap: pretty;
+}
+.entry-title a { text-decoration: none; }
+
+.entry-venue { margin: 0.4rem 0 0; font-size: 0.95rem; color: var(--ink-soft); }
+.entry-venue cite { font-style: italic; }
+.entry-venue .with { color: var(--ink-faint); }
+
+.entry-links { margin-top: 0.7rem; display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; align-items: center; }
+.chip {
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none;
+  color: var(--ink-soft); border: 1px solid var(--rule);
+  padding: 0.22rem 0.5rem; border-radius: var(--radius-ctl); white-space: nowrap;
+}
+
+/* Abstracts live in front matter and the single pages have empty bodies, so
+   they expand in place rather than sending the reader to a near-blank page. */
+.entry details { margin-top: 0.7rem; }
+.entry summary {
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint);
+  cursor: pointer; list-style: none;
+  display: inline-flex; align-items: center; gap: 0.4rem; padding-block: 0.15rem;
+}
+.entry summary::-webkit-details-marker { display: none; }
+.entry summary::before { content: "+"; font-size: 0.85rem; line-height: 1; color: var(--accent); }
+.entry details[open] summary::before { content: "\2212"; }
+.entry details .abstract {
+  margin: 0.65rem 0 0; max-width: var(--measure);
+  font-size: 0.975rem; color: var(--ink-soft);
+  border-left: 2px solid var(--accent-hair); padding-left: 1rem;
+  /* These run to 2,000 characters, so they get a little more air than body
+     copy to keep a long block scannable. */
+  line-height: 1.7;
+}
+.entry details .abstract p { margin: 0 0 0.9rem; }
+.entry details .abstract p:last-child { margin-bottom: 0; }
+
+/* --- project cards ------------------------------------------------------- */
+
+.grid-projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1px; background: var(--rule); border: 1px solid var(--rule);
+}
+.project { background: var(--paper); padding: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.project h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
+.project p { margin: 0; font-size: 0.95rem; color: var(--ink-soft); }
+.project .label { color: var(--accent); }
+
+/* --- about --------------------------------------------------------------- */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: start;
+}
+.about-portrait { margin: 0; }
+.about-portrait img { width: 100%; border-radius: var(--radius-img); }
+
+.prose { max-width: var(--measure); }
+.prose p { margin: 0 0 1.1rem; }
+/* The base heading rule zeroes every margin, which is right for headings the
+   templates position themselves but wrong inside body copy, where they had no
+   size and no space around them at all. */
+.prose h2 {
+  font-size: clamp(1.15rem, 1.05rem + 0.4vw, 1.35rem);
+  margin: 2.25rem 0 0.75rem;
+}
+.prose h3 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.6rem;
+}
+.prose > :first-child { margin-top: 0; }
+.prose p:last-child { margin-bottom: 0; }
+.prose a { color: var(--accent); text-decoration-color: var(--accent-hair); }
+
+/* --- call to action ------------------------------------------------------
+   The take-part page's only button. Square, like everything else, and it
+   borrows the section accent rather than introducing a third colour.         */
+
+.cta { margin: 1.75rem 0; }
+.cta a {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--paper);
+  background: var(--accent);
+  padding: 0.8rem 1.4rem;
+  border-radius: var(--radius-ctl);
+}
+
+/* --- footer -------------------------------------------------------------- */
+
+.site-footer {
+  border-top: 1px solid var(--rule); background: var(--paper-sunk);
+  padding-block: clamp(2.5rem, 5vw, 3.5rem); margin-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 2rem; align-items: start; }
+/* Column headings. These name a group rather than titling a section, so they
+   take the same mono label treatment as .label and .year-heading instead of
+   being display headings. The element is an h2 for the document outline. */
+.footer-grid h2 {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 1.1rem;
+}
+.footer-links { display: flex; flex-direction: column; gap: 0.35rem; }
+.footer-links a { font-size: 0.925rem; color: var(--ink-soft); text-decoration: none; width: fit-content; }
+.colophon {
+  margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  font-family: var(--font-mono); font-size: 0.6875rem; color: var(--ink-faint); letter-spacing: 0.03em;
+}
+
+/* --- author profile ------------------------------------------------------
+   Repeats the hero's anchored portrait, centred rather than beside type. The
+   bottom padding and the portrait's negative margin share one variable so the
+   photo always lands exactly on the rule.                                    */
+
+.profile {
+  --profile-pad-end: clamp(2.5rem, 6vw, 4rem);
+  padding-block: clamp(2.5rem, 6vw, 4rem) var(--profile-pad-end);
+  border-bottom: 1px solid var(--rule);
+  text-align: center;
+}
+.profile h1 { font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem); }
+.profile-role {
+  margin: 0.8rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+}
+.profile-portrait {
+  width: clamp(11rem, 30vw, 16rem);
+  margin: clamp(2rem, 5vw, 3rem) auto calc(-1 * var(--profile-pad-end));
+}
+.profile-portrait img { width: 100%; border-radius: var(--radius-img); display: block; }
+/* The header above is centred, so centre the measure under it rather than
+   leaving the prose hard against the left edge of a 74rem wrap. */
+.profile-body .prose { margin-inline: auto; }
+
+/* Lists on this page centre as blocks to match, but their rows stay
+   left-aligned: centring a date column against its title would be unreadable.
+   The accent stub is absolutely positioned at the left of its heading, so it
+   needs centring explicitly or it would sit off to one side. */
+.profile-list .section-head { justify-content: center; }
+.profile-list .section-head h2::before { left: 50%; transform: translateX(-50%); }
+/* The ledger runs the full wrap everywhere else. Here the rows are two short
+   lines under centred content, so they keep a measure of their own. */
+.profile-list .ledger { max-width: 46rem; margin-inline: auto; }
+
+/* --- list pages ---------------------------------------------------------- */
+
+.page-head { padding-block: clamp(2.5rem, 6vw, 4rem) clamp(1.75rem, 4vw, 2.5rem); border-bottom: 1px solid var(--rule); }
+.page-head h1 { font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem); }
+.page-head p { max-width: var(--measure); color: var(--ink-soft); margin: 1rem 0 0; }
+
+/* --- single pages --------------------------------------------------------
+   Most single pages carry almost nothing: the listing already shows the title,
+   venue and links, and the abstract expands in place there. These exist for
+   the few that have a real body, and for the author pages.                   */
+
+.page-title {
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.4rem);
+  margin: 0.6rem 0 0;
+  max-width: 26ch;
+}
+.page-venue {
+  margin: 0.6rem 0 0;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+}
+.page-venue cite { font-style: italic; }
+.page-abstract { margin-top: 1.75rem; }
+.page-abstract p {
+  border-left: 2px solid var(--accent-hair);
+  padding-left: 1.25rem;
+  color: var(--ink-soft);
+}
+
+.year-group { margin-top: 2.5rem; }
+.year-group:first-of-type { margin-top: 1.5rem; }
+/* An h2 for the document outline, a mono label to the eye. */
+.year-heading {
+  font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-faint); margin: 0 0 0.25rem;
+}
+
+/* --- responsive ----------------------------------------------------------
+   Below 52rem the hero stacks and the portrait comes first, so the "this is a
+   person" signal still lands on arrival rather than below a screen of type.  */
+
+@media (max-width: 52rem) {
+  .hero > .wrap { grid-template-columns: 1fr; gap: 1.75rem; }
+  /* Centred, and no longer anchored: there is no bottom rule to meet once the
+     hero stacks. */
+  .hero-portrait { order: -1; max-width: 13rem; margin: 0 auto; }
+
+  /* Two groups, not four items. The photograph, her name and her title are who
+     she is; the labels and the question are what she works on, the labels
+     being the question's kicker exactly as they are on a wide screen.
+
+     Spacing is what says so. An even gap down all four left the labels
+     floating between the two, belonging to neither, and the question reading
+     as a leftover after them. So the gap is tight and the break above the
+     labels is wide.
+
+     In markup order none of this holds: the labels land under the photograph
+     and caption it, and her name sits a screen below past the whole question.
+     A grid only so they can be reordered. */
+  .hero-intro { display: grid; gap: 2.2rem; }
+  .hero-meta { order: -2; margin: 0; align-items: center; text-align: center; }
+  /* The eyebrow is a wide-screen device. Stacked it will not fit on one line,
+     and wherever it went it read as something's caption rather than as a
+     kicker. Its only load-bearing half was the university, which her title
+     names at every width, so there is nothing left for it to say here. */
+  .hero-eyebrow { display: none; }
+  /* Centred with everything else. Left-aligned it read as an orphan against a
+     centred column, which is worth more here than the argument for ranging a
+     three-line question left. */
+  .hero-statement { order: 0; text-align: center; margin-inline: auto; }
+
+  .about-grid { grid-template-columns: 1fr; }
+  .about-portrait { max-width: 11rem; }
+}
+
+@media (max-width: 34rem) {
+  /* The field holds an 18rem basis on wider screens so the group stays ranged
+     right. Down here that basis wraps the count and the button onto lines of
+     their own, three rows for one control, so let it shrink instead. */
+  .list-filter-input { flex: 1 1 8rem; }
+  .entry { grid-template-columns: 1fr; gap: 0.5rem; }
+  .entry-rail { grid-column: 1; display: flex; align-items: baseline; gap: 0.75rem; }
+  .entry-kind { margin-top: 0; }
+  .entry-body { grid-column: 1; }
+  .entry-year { font-size: 1.1rem; }
+}
+
+/* --- pointing devices ----------------------------------------------------
+   Every :hover rule on the site lives here rather than beside its component,
+   because on a touch screen a tapped element can keep its hover state. In the
+   nav that mattered for more than tidiness: hover drew the same underline as
+   aria-current, so a tapped link went on claiming to be the current page.    */
+
+@media (hover: hover) {
+  a:hover { text-decoration-color: currentColor; }
+  .masthead nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+  .theme-toggle:hover { border-color: var(--rule-strong); color: var(--ink); }
+  .section-head a.more:hover { color: var(--ink); }
+  .entry-title a:hover { text-decoration: underline; text-decoration-color: var(--accent); }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .entry summary:hover { color: var(--ink); }
+  .prose a:hover { text-decoration-color: var(--accent); }
+  .cta a:hover { background: var(--ink); }
+  .footer-links a:hover { color: var(--ink); text-decoration: underline; }
+  .search-toggle:hover, .search-close:hover { border-color: var(--rule-strong); color: var(--ink); }
+  .search-results a:hover { background: var(--paper-sunk); }
+  .search-row:hover { color: var(--ink); }
+  .list-filter-clear:hover { border-color: var(--accent); color: var(--accent); }
+}
+
+/* --- touch ---------------------------------------------------------------
+   Measured at 375px, every control was under 44px tall and two were under the
+   24px WCAG 2.5.8 floor: the section "more" links and the abstract disclosure,
+   both 22px. The fix is hit area through padding, so nothing changes size to
+   the eye and the wide-screen density is untouched.
+
+   Chips are left alone. At 46x27 they already clear 24px, and 44px chips would
+   be the heaviest thing on a page built from hairlines, so they get spacing
+   instead.                                                                   */
+
+@media (pointer: coarse) {
+  .masthead-name { display: flex; align-items: center; min-height: 44px; }
+  .theme-toggle { padding-block: 0.8rem; }
+  .section-head a.more { display: inline-flex; align-items: center; min-height: 44px; }
+  .entry summary { min-height: 44px; }
+  .footer-links { gap: 0.15rem; }
+  .footer-links a { display: flex; align-items: center; min-height: 44px; }
+  .entry-links { gap: 0.6rem 0.6rem; }
+  .cta a { padding-block: 1rem; }
+  .search-toggle, .search-close { padding-block: 0.8rem; }
+  .list-filter-input { padding-block: 0.8rem; }
+  .list-filter-clear { padding-block: 0.7rem; }
+  .search-results a { padding-block: 0.9rem; }
+  /* A one-line title link was 18px tall, since an inline element's target is
+     its font box and neither line-height nor the row around it enlarges that.
+     Padding it moves every row down, measurably by 18px, so the target is
+     grown with a positioned pseudo-element, which takes no part in layout.
+
+     0.3rem each way, not more. The venue line sits 0.4rem below, and on a
+     media row that line carries its own links, so a deeper reach would put an
+     invisible title target over them. That lands at about 28px, over the 24px
+     WCAG 2.5.8 floor rather than at the 44px ideal, which is the most this can
+     have without either moving the row or swallowing the link beneath it. */
+  .entry-title a { position: relative; }
+  .entry-title a::after { content: ""; position: absolute; inset: -0.3rem 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .masthead, .theme-toggle, .skip { display: none; }
+  body { background: #fff; color: #000; }
+}

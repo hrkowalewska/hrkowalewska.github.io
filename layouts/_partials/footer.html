@@ -1,0 +1,41 @@
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h2>Contact</h2>
+        <div class="footer-links">
+          <a href="mailto:{{ site.Params.email }}">{{ site.Params.email }}</a>
+          {{- with site.Params.department_url }}
+          <a href="{{ . }}"{{ partial "extlink.html" . | safeHTMLAttr }}>{{ site.Params.department }}</a>
+          {{- end }}
+          {{- with site.Params.cv }}
+          <a href="{{ . | relURL }}">Download CV (PDF)</a>
+          {{- end }}
+        </div>
+      </div>
+      <div>
+        <h2>Elsewhere</h2>
+        <div class="footer-links">
+          {{- range site.Params.social }}
+          <a href="{{ .url }}" rel="me noopener" target="_blank">{{ .name }}</a>
+          {{- end }}
+        </div>
+      </div>
+      <div>
+        <h2>Sections</h2>
+        <div class="footer-links">
+          {{- range site.Menus.main }}
+          <a href="{{ .URL | relURL }}">{{ .Name }}</a>
+          {{- end }}
+          {{- /* Take part is a recruitment call rather than a standing section,
+                 so it lives here rather than in the nav. Without this it has no
+                 inbound link from anywhere on the site. */ -}}
+          {{- with site.GetPage "/take-part" }}
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          {{- end }}
+        </div>
+      </div>
+    </div>
+    <p class="colophon">{{ replace site.Copyright "{year}" now.Year | safeHTML }}</p>
+  </div>
+</footer>
