@@ -12,6 +12,7 @@
 
 <section class="section">
   <div class="wrap">
+    {{ partial "list-filter.html" (dict "count" (len hugo.Data.teaching) "noun" "units") }}
     {{ partial "stack.html" hugo.Data.teaching }}
   </div>
 </section>

@@ -12,6 +12,7 @@
 {{- with .Pages }}
 <section class="section">
   <div class="wrap">
+    {{ partial "list-filter.html" (dict "count" (len .) "noun" "items") }}
     {{- range .GroupByDate "2006" }}
     <div class="year-group">
       <h2 class="year-heading">{{ .Key }}</h2>

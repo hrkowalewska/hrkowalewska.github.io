@@ -6,6 +6,7 @@
 <a class="skip" href="#main">Skip to content</a>
 
 {{ partial "masthead.html" . }}
+{{ partial "search.html" . }}
 
 {{- /* The accent belongs to the section, so it is set once here rather than on
        each block. Only --accent and --accent-hair change, and the masthead and
@@ -28,6 +29,7 @@
 
 {{ partial "theme-toggle-js.html" . }}
 {{ partial "nav-drawer-js.html" . }}
+{{ partial "search-js.html" . }}
 {{ partial "hero-rotate-js.html" . }}
 
 </body>

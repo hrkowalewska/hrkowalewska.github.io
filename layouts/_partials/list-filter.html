@@ -1,0 +1,21 @@
+{{- /*
+  The box above a ledger, sitting with the list it filters rather than up in the
+  page header, and ranged right so it reads as a control on the table instead of
+  part of the introduction.
+
+  Hidden until search-js.html reveals it, so with no JavaScript there is no
+  control that does nothing and the full list is still right there. Takes the
+  count and noun to describe what it filters.
+*/ -}}
+<div class="list-filter" hidden>
+  <input class="list-filter-input" id="list-filter" type="search" autocomplete="off"
+         spellcheck="false" placeholder="Filter these {{ .count }} {{ .noun }}&hellip;"
+         aria-label="Filter these {{ .count }} {{ .noun }}">
+  <span class="list-filter-count" id="list-filter-count" role="status" aria-live="polite"></span>
+  {{- /* Shown only once there is something to clear, and named rather than
+         drawn as a glyph, like Close on the search dialog. */}}
+  <button class="list-filter-clear" id="list-filter-clear" type="button" hidden>Clear</button>
+</div>
+<p class="list-filter-empty" id="list-filter-empty" hidden>
+  Nothing here matches. <button type="button" data-search-open>Search the whole site</button>
+</p>

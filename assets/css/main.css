@@ -151,6 +151,15 @@ a { color: inherit; text-decoration-color: var(--rule-strong); text-underline-of
 
 img { max-width: 100%; height: auto; display: block; }
 
+/* A component's own `display` outranks the UA rule for [hidden], which is how
+   the drawer's search row stayed visible with JavaScript off. Everything here
+   that is revealed by script is hidden in the markup, so this has to win. */
+[hidden] { display: none !important; }
+
+/* The masthead is sticky, so anything jumped to lands underneath it without
+   this. Scoped to whatever is actually targeted rather than every id. */
+:target { scroll-margin-top: 5.5rem; }
+
 .skip {
   position: absolute; left: -9999px; top: 0;
   background: var(--ink); color: var(--paper);
@@ -210,8 +219,10 @@ img { max-width: 100%; height: auto; display: block; }
 /* --- mobile nav drawer ---------------------------------------------------
    Seven links wrapped onto two rows under the name and left a sticky 186px
    header on every phone, 28% of an iPhone SE, held the whole way down an
-   18-screen archive. 52rem is the switch because that is where the row fits
-   unaided, measured at 61px.
+   57rem is the switch, because that is the narrowest the bar fits on one row
+   once it carries a search trigger as well, measured at 904px. It was 52rem
+   before search existed; adding a 64px button to a bar that was already nearly
+   full wrapped it to 90px everywhere from 833px to 903px.
 
    Everything here is gated on .has-drawer, which nav-drawer-js.html adds at
    load, so with no JavaScript the button stays hidden and the nav keeps the
@@ -221,7 +232,7 @@ img { max-width: 100%; height: auto; display: block; }
 .nav-toggle { display: none; }
 .nav-backdrop { display: none; }
 
-@media (max-width: 52rem) {
+@media (max-width: 57rem) {
   /* backdrop-filter makes an element the containing block for fixed-position
      descendants, which would trap the panel inside the bar. The blur is a
      wide-screen nicety, so drop it here and go opaque, which reads better over
@@ -310,6 +321,113 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* Set by the script while the drawer is open. */
 .nav-open, .nav-open body { overflow: hidden; }
+
+/* --- search ---------------------------------------------------------------
+   A <dialog> in the top layer, so none of the drawer's stacking problems
+   apply. The triggers and the listing filter are hidden in the markup and
+   revealed by search-js.html, so without JavaScript nothing appears that does
+   nothing.                                                                   */
+
+.search-toggle {
+  font: inherit; font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: none; border: 1px solid var(--rule); color: var(--ink-soft);
+  padding: 0.3rem 0.55rem; cursor: pointer; border-radius: var(--radius-ctl);
+}
+
+.search-row {
+  font: inherit; font-family: var(--font-display); font-size: 1rem;
+  text-align: left; background: none; border: 0; cursor: pointer; color: var(--ink);
+  display: flex; align-items: center; min-height: 48px;
+  padding: 0.7rem var(--gutter);
+  border-bottom: 1px solid var(--rule); border-left: 3px solid transparent;
+}
+
+/* Which of the two triggers is shown. These follow both rules above rather
+   than sitting between them, since .search-row sets its own display and would
+   otherwise win on source order at every width. The bar carries the trigger
+   only where there is room: at 320px its contents already exceed the wrap. */
+@media (max-width: 57rem) { .search-toggle { display: none; } }
+@media (min-width: 57.0625rem) { .search-row { display: none; } }
+
+.search[open] {
+  display: flex; flex-direction: column;
+  width: min(100% - 2rem, 42rem);
+  max-height: min(80vh, 40rem);
+  margin: clamp(1rem, 8vh, 6rem) auto auto;
+  padding: 0; border: 1px solid var(--rule-strong); border-radius: var(--radius-ctl);
+  background: var(--paper); color: var(--ink);
+  box-shadow: 0 1rem 3rem oklch(0 0 0 / 0.18);
+}
+.search::backdrop { background: oklch(0 0 0 / 0.45); }
+
+.search-bar { display: flex; gap: 0.75rem; align-items: center; padding: 0.9rem 1rem; border-bottom: 1px solid var(--rule); }
+.search-input {
+  font: inherit; font-family: var(--font-display); font-size: 1.05rem;
+  flex: 1; min-width: 0; background: none; border: 0; color: var(--ink);
+}
+.search-input:focus { outline: none; }
+.search-input::-webkit-search-cancel-button { display: none; }
+.search-close {
+  font: inherit; font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: none; border: 1px solid var(--rule); color: var(--ink-soft);
+  padding: 0.3rem 0.55rem; cursor: pointer; border-radius: var(--radius-ctl);
+}
+.search-count {
+  margin: 0; padding: 0.5rem 1rem;
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint);
+}
+.search-results { list-style: none; margin: 0; padding: 0 0 0.5rem; overflow-y: auto; }
+.search-results a {
+  display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.15rem 1rem;
+  padding: 0.7rem 1rem; text-decoration: none;
+  border-top: 1px solid var(--rule);
+}
+.search-kind {
+  grid-row: span 2; align-self: start; padding-top: 0.15rem;
+  font-family: var(--font-mono); font-size: 0.625rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
+}
+.search-title { font-family: var(--font-display); font-weight: 600; line-height: 1.3; }
+.search-where { font-size: 0.875rem; color: var(--ink-soft); }
+.search-results a.is-active, .search-results a:focus-visible { background: var(--paper-sunk); outline: none; }
+
+/* Ranged right, above the table it filters. Wraps to a full-width field on a
+   narrow screen rather than squeezing into a corner. */
+.list-filter {
+  display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center;
+  gap: 0.5rem 0.75rem; margin-bottom: 1.25rem;
+}
+.list-filter-input {
+  font: inherit; font-family: var(--font-display); font-size: 0.95rem;
+  flex: 0 1 18rem; min-width: 0;
+  background: none; color: var(--ink); text-align: left;
+  border: 0; border-bottom: 1px solid var(--rule-strong);
+  padding: 0.4rem 0;
+}
+.list-filter-input:focus { outline: none; border-bottom-color: var(--accent); }
+.list-filter-clear {
+  font: inherit; font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  background: none; border: 1px solid var(--rule); color: var(--ink-soft);
+  padding: 0.22rem 0.5rem; cursor: pointer; border-radius: var(--radius-ctl);
+  white-space: nowrap;
+}
+.list-filter-input::-webkit-search-cancel-button { display: none; }
+.list-filter-count {
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint);
+  /* Ahead of the field rather than pushed to the far edge: it is the field's
+     own readout, so it belongs beside it. */
+  white-space: nowrap; order: -1;
+}
+.list-filter-empty { margin: 0 0 2rem; color: var(--ink-soft); }
+.list-filter-empty button {
+  font: inherit; background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--accent); text-decoration: underline; text-decoration-color: var(--accent-hair);
+}
 
 /* --- hero ----------------------------------------------------------------
    The portrait is the only warm, photographic thing on an otherwise cool and
@@ -671,6 +789,10 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 @media (max-width: 34rem) {
+  /* The field holds an 18rem basis on wider screens so the group stays ranged
+     right. Down here that basis wraps the count and the button onto lines of
+     their own, three rows for one control, so let it shrink instead. */
+  .list-filter-input { flex: 1 1 8rem; }
   .entry { grid-template-columns: 1fr; gap: 0.5rem; }
   .entry-rail { grid-column: 1; display: flex; align-items: baseline; gap: 0.75rem; }
   .entry-kind { margin-top: 0; }
@@ -695,6 +817,10 @@ img { max-width: 100%; height: auto; display: block; }
   .prose a:hover { text-decoration-color: var(--accent); }
   .cta a:hover { background: var(--ink); }
   .footer-links a:hover { color: var(--ink); text-decoration: underline; }
+  .search-toggle:hover, .search-close:hover { border-color: var(--rule-strong); color: var(--ink); }
+  .search-results a:hover { background: var(--paper-sunk); }
+  .search-row:hover { color: var(--ink); }
+  .list-filter-clear:hover { border-color: var(--accent); color: var(--accent); }
 }
 
 /* --- touch ---------------------------------------------------------------
@@ -716,6 +842,10 @@ img { max-width: 100%; height: auto; display: block; }
   .footer-links a { display: flex; align-items: center; min-height: 44px; }
   .entry-links { gap: 0.6rem 0.6rem; }
   .cta a { padding-block: 1rem; }
+  .search-toggle, .search-close { padding-block: 0.8rem; }
+  .list-filter-input { padding-block: 0.8rem; }
+  .list-filter-clear { padding-block: 0.7rem; }
+  .search-results a { padding-block: 0.9rem; }
   /* A one-line title link was 18px tall, since an inline element's target is
      its font box and neither line-height nor the row around it enlarges that.
      Padding it moves every row down, measurably by 18px, so the target is

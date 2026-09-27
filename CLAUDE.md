@@ -182,9 +182,12 @@ Components never name an accent. They read `var(--accent)`, which `:root` sets t
 Minification and fingerprinting are gated on `hugo.IsServer`, not `hugo.IsProduction`, so only the
 dev server skips them and a staging build is otherwise byte-identical to production.
 
-**The nav is a drawer below 52rem.** Seven links wrapped onto two rows under the name and left a
+**The nav is a drawer below 57rem.** Seven links wrapped onto two rows under the name and left a
 sticky 186px masthead on every phone, 28% of an iPhone SE, held all the way down an 18-screen
-archive. It is 61px at every width now.
+archive. It is 61px at every width now, and that is the invariant to protect: anything added to the
+bar has to keep it on one row. The breakpoint was 52rem until the search trigger arrived, because
+904px is the narrowest the bar fits once it carries one. The hero's own 52rem is a separate
+question and did not move.
 
 There is one `<nav>` in the markup, not two. `nav-drawer-js.html` adds `.has-drawer` at load and
 only then does the CSS switch to drawer mode and reveal the button. With JavaScript off the button
@@ -207,6 +210,31 @@ from padding, so nothing changes size to the eye. Two deliberate exceptions. Chi
 already over the floor, because 44px chips would be the heaviest thing on a page of hairlines. And a
 one-line entry title gets a positioned pseudo-element rather than padding, reaching about 28px,
 because an inline element's target is its font box and padding it moved every row down.
+
+**Search is a dialog, and a filter.** `layouts/home.json` emits an index of all 86 items, content
+pages and the three `data/` files alike, and `search-js.html` fetches it the first time search is
+opened and never otherwise. Matching is plain: every token must appear, a title match sorts first.
+At this size that beats stemming for both weight and surprise.
+
+Where a result goes is decided in Hugo, not in the script. An item whose own page is worth visiting
+links to it, by the same `showpage.html` the listings read; everything else links to its listing
+carrying `?q=`, and the filter picks that up on arrival. Writing it once means the rule cannot drift
+away from the listings.
+
+That is also why Pagefind is the wrong tool here despite being the obvious one and genuinely
+Node-free. It indexes built HTML, so it would find the 53 thin pages that are deliberately unlinked
+and return everything twice, and excluding them leaves a result pointing at a whole listing with no
+way to reach the row.
+
+A result's rail names the section it will send you to, taken from the nav rather than the section
+page's title, because two of them differ and the long forms wrap in a column sized for a year.
+Experience is the one exception to `?q=`: it lives on the About page, which is a profile with no
+filter, so those link to `#experience` instead.
+
+The same matcher filters a listing in place, which is what `?q=` lands on. It has to hide a year
+heading left with nothing under it, of which `/media/` has seven. The box sits with the table rather
+than in the page header, ranged right, and its Clear button also strips `?q=` so a reload does not
+silently refilter.
 
 **The theme control has three states**, auto, light and dark, cycled in that order. Auto is the
 absence of a choice rather than a value: it removes `data-theme` and clears the stored key, so the

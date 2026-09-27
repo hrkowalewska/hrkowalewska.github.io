@@ -18,7 +18,9 @@ ignoreFiles = ["content/post/"]
   pagerSize = 20
 
 [outputs]
-  home = ["HTML", "RSS"]
+  # JSON on the home page is the search index, built by layouts/home.json. It
+  # covers the data files too, so it is not derivable from the rendered pages.
+  home = ["HTML", "RSS", "JSON"]
   section = ["HTML", "RSS"]
 
 [imaging]

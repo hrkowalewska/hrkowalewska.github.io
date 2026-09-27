@@ -1,5 +1,6 @@
 <script>
-// The nav becomes a drawer below 52rem.
+// The nav becomes a drawer below 57rem, which is the narrowest the bar fits
+// on one row once it also carries a search trigger.
 //
 // Progressive enhancement, in the same shape as the theme control. The markup
 // holds one <nav> and a button that is hidden until this script adds
@@ -30,7 +31,7 @@
 
   // Out of the tab order while closed, but only in drawer mode. Wider than the
   // breakpoint this is the ordinary nav row and must stay reachable.
-  var wide = window.matchMedia('(min-width: 52.0625rem)');
+  var wide = window.matchMedia('(min-width: 57.0625rem)');
 
   function syncInert() { nav.inert = !wide.matches && !open; }
 
